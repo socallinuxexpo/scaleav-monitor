@@ -16,13 +16,13 @@ class Stream(object):
         '''
         self.window = window
         self.stages = [{
-                         "name":"audio-source",
+                         "name":"video-source",
                          "handler":"videotestsrc",
                          "source":True
                        },
                        {
-                         "name":"audio-sink",
-                         "handler":"autovideosink",
+                         "name":"video-sink",
+                         "handler":"ximagesink",
                          "sink":True
                        }]
         self.pipeline = Gst.Pipeline("audio-pipeline")
@@ -42,6 +42,7 @@ class Stream(object):
         bus = self.pipeline.get_bus()
         bus.add_signal_watch()
         bus.connect("message::error",self.onError)
+        #TODO: Handel EOS (message::eos)
         bus.enable_sync_message_emission()
         bus.connect("sync-message::element",self.onSync)
     def onSync(self,bus,msg):
