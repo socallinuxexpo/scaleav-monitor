@@ -7,6 +7,7 @@ class BaseStream(object):
     @author starchmd
     Base GStreamer stream
     '''
+    running=None
     def __init__(self,name,stages):
         '''
         Initializes this pipeline
@@ -30,10 +31,10 @@ class BaseStream(object):
         self.bus.connect("sync-message::element",self.onSync)
         #Build the stages 
         for index in range(0,len(stages)):
-            elem =  = Gst.ElementFactory.make(stages[index],str(index))
+            elem = Gst.ElementFactory.make(stages[index],str(index))
             self.pipeline.add(elem)
             if index > 0:
-                self.pipeline.get_child_by_name(str(index)).link(elem)
+                self.pipeline.get_child_by_name(str(index-1)).link(elem)
         self.running = False
     def setSource(self,source,autoplay=False):
         '''

@@ -1,11 +1,11 @@
-from window import Display
-from stream import Stream
 from gthread import loop
+from window import Display
+from video import Video
 #Main program
 if __name__ == "__main__":
     for stream in ["1","2"]:
         display = Display(stream)
-        stream = Stream(display)
+        stream = Video(display)
         display.run()
-        stream.run()
+        stream.start()
     loop()
