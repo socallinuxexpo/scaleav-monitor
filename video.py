@@ -2,9 +2,6 @@ import gi
 gi.require_version("Gst","1.0")
 from gi.repository import  Gst, GstVideo
 
-#Global initializations
-Gst.init(None)
-
 class Stream(object):
     '''
     @author starchmd
