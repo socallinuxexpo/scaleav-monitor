@@ -2,9 +2,9 @@ import gi
 gi.require_version("Gst","1.0")
 from gi.repository import  Gst, GstVideo
 
-import stream
+import av.stream
 
-class Video(stream.BaseStream):
+class Video(av.stream.BaseStream):
     '''
     @author starchmd
     Stream GStream pipline to window

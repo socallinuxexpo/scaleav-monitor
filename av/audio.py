@@ -2,9 +2,9 @@ import gi
 gi.require_version("Gst","1.0")
 from gi.repository import  Gst, GstVideo
 
-import stream
+import av.stream
 
-class Audio(stream.BaseStream):
+class Audio(av.stream.BaseStream):
     '''
     @author starchmd
     Audio stream for audio sink
