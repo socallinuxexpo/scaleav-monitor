@@ -46,8 +46,15 @@ class BaseStream(object):
         if self.running is None:
             raise StreamNotBuiltException()
         run = (not self.running is None and self.running) or autoplay
+        print("Stopping")
         self.stop()
         original = self.pipeline.get_child_by_name("0")
+        print("Removing")
+        self.pipeline.remove(original)
+        print("Adding:",source)
+        self.pipeline.add(source,"0")
+        print("Relinking")
+        source.link(self.pipeline.get_child_by_name("1"))
         if run:
             self.start()
     def onSync(self,bus,msg):
@@ -71,7 +78,9 @@ class BaseStream(object):
         if self.running is None:
             raise StreamNotBuiltException()
         self.running = True
+        print("Starting")
         self.pipeline.set_state(Gst.State.PLAYING)
+        print("Starting After")
     def stop(self):
         '''
         Stop the stream

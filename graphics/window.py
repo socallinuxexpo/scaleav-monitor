@@ -25,6 +25,9 @@ class Display(object):
         self.window.set_title(title)
         self.title = title
         self.xid = None
+        #Callbacks
+        self.focusfn = []
+
     def run(self):
         '''
         Start the main program
@@ -48,8 +51,13 @@ class Display(object):
        '''
        Focus change event
        '''
-       print("Focus-in:",self.title)
-       for arg in args:
-           print(type(arg),arg)
+       print("Focus event happend")
+       for fn in self.focusfn:
+           fn()
 
-
+    def registerFocusEvent(self,func):
+        '''
+        Registers a function on focus event
+        @param func - function to call on focus
+        '''
+        self.focusfn.append(func)
