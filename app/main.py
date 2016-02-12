@@ -1,15 +1,11 @@
 import graphics.gthread
-import graphics.window
+import graphics.display
 import av.av
 import av.audio
 
 #Main program
 if __name__ == "__main__":
-    for stream in ["1","2"]:
-        display = graphics.window.Display(stream)
-        audio = av.audio.Audio()
-        stream = av.av.AV(display,audio)
-        display.run()
-        audio.start()
-        stream.start()
+    for stream in ["1","2","3","4","5","6","7"]:
+        display = graphics.display.AVDisplay(stream)
+        display.show()
     graphics.gthread.loop()

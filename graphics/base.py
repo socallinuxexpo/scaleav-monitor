@@ -3,10 +3,11 @@ gi.require_version("Gtk","3.0")
 from gi.repository import Gtk, GdkX11
 
 
-class Display(object):
+class BaseDisplay(object):
     '''
     @author starchmd
-    A display built on GTK for use in diaplying GStreamer streams
+    A base display window built on GTK containing a drawing area
+    for GStream or anything else to draw in.
     '''
     def __init__(self,title):
         '''
@@ -15,8 +16,9 @@ class Display(object):
         '''
         self.window = Gtk.Window()
         #Connect callbacks
-        self.window.connect("destroy", self.quit)
-        self.window.connect("focus-in-event",self.focus)
+        self.window.connect("destroy",self.destroy)
+        self.window.connect("focus-in-event",self.focusIn)
+        self.window.connect("focus-out-event",self.focusOut)
         #Construct window with drawing area
         self.area = Gtk.DrawingArea()
         self.area.set_double_buffered(True)
@@ -25,10 +27,7 @@ class Display(object):
         self.window.set_title(title)
         self.title = title
         self.xid = None
-        #Callbacks
-        self.focusfn = []
-
-    def run(self):
+    def show(self):
         '''
         Start the main program
         '''
@@ -40,24 +39,20 @@ class Display(object):
         Gets the X11 window ID
         '''
         return self.xid
-    def quit(self,window):
+    def destroy(self,window):
         '''
         Quit function, GTK quit callback
         @param window - supplied by Gtk, window object
         '''
-        #TODO: callbacks happen here
-        Gtk.main_quit()
-    def focus(self,*args):
+        pass
+#        Gtk.main_quit()
+    def focusIn(self,*args):
        '''
        Focus change event
        '''
-       print("Focus event happend")
-       for fn in self.focusfn:
-           fn()
-
-    def registerFocusEvent(self,func):
-        '''
-        Registers a function on focus event
-        @param func - function to call on focus
-        '''
-        self.focusfn.append(func)
+       pass
+    def focusOut(self,*args):
+       '''
+       Focus change event
+       '''
+       pass
