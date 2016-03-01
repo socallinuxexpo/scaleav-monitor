@@ -2,6 +2,7 @@
 
 **Note:** This is a work in progress, designed in preparation for Scale 15x (March, 2017).
 
+
 This repository holds the python, GStreamer, and GTK+ reworking of the ScaleAV video stream monitoring software. This solution has several advantages above the original solution:
 
 - **Unified Window and Event code:**
@@ -11,3 +12,6 @@ This repository holds the python, GStreamer, and GTK+ reworking of the ScaleAV v
 - **Python:** 
   A unified solution in python replaces a multi-language, multi-technology stack, which reduces the learning curve and minimizes the codebase. This allows for easier maintainability in a volunteer-staffed environment.
 
+## Known Bugs
+- Windows are designed to regenerate when killed, forcing an external process termination
+- If a window is killed too quickly after regneration, property-not-found errors may arise due to incomplete initialization
