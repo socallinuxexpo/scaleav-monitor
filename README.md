@@ -29,4 +29,6 @@ Docker is being considered as one of the Scale-AV global deployment strategies. 
 - DBus support
 - Audio
 
+**Recommendation:** A simple dependency install script may be advisable to a full Docker build for this application.
+
 
