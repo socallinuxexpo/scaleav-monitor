@@ -45,7 +45,6 @@ class BaseDisplay(object):
         @param window - supplied by Gtk, window object
         '''
         pass
-#        Gtk.main_quit()
     def focusIn(self,*args):
        '''
        Focus change event
