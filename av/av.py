@@ -1,5 +1,6 @@
 import av.video
 import av.audio
+#Note: count is used for the tone ladder audio test code below
 count=1
 class AV():
     '''
@@ -48,27 +49,3 @@ class AV():
         '''
         self.video.stop()
         self.audio.stop()
-#       window.registerGainFocus(self.gainFocus)
-#       window.registerLoseFocus(self.loseFocus)
-#       window.registerQuit(self.stopAll)
-#    def startVideo(self):
-#        '''
-#        Starts the video stream
-#        '''
-#        self.video.start()
-#    def stopAll(self):
-#        '''
-#        Stops all streams
-#        '''
-#        self.video.stop()
-#        self.audio.stop()
-#    def gainFocus(self):
-#        '''
-#        Gain focus to controlling window
-#        '''
-#        self.audio.start()
-#    def loseFocus(self):
-#        '''
-#        Lose the focuse to controlling window
-#        '''
-#        self.audio.stop()
