@@ -12,6 +12,22 @@ This repository holds the python, GStreamer, and GTK+ reworking of the ScaleAV v
 - **Python:** 
   A unified solution in python replaces a multi-language, multi-technology stack, which reduces the learning curve and minimizes the codebase. This allows for easier maintainability in a volunteer-staffed environment.
 
+## Installation and Execution
+
+These instructions assume a Debian/Ubuntu system with Python 3 installed.
+**Note:** Only tested on Ubuntu
+
+**Installation:**
+```
+sudo apt-get install -y git gir1.2-gtk-3.0 gir1.2-gst-plugins-base-1.0 python3-gi gstreamer-1.0 python3-gst-1.0 libcanberra-gtk3-module
+git clone https://github.com/LeStarch/gstreamer-pencil-tests.git
+```
+**Execution:**
+```
+cd gstreamer-pencil-tests
+python3 -m app.main
+```
+
 ## Known Bugs
 - Windows are designed to regenerate when killed, forcing an external process termination
 - If a window is killed too quickly after regneration, property-not-found errors may arise due to incomplete initialization
