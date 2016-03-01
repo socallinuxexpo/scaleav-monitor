@@ -15,3 +15,18 @@ This repository holds the python, GStreamer, and GTK+ reworking of the ScaleAV v
 ## Known Bugs
 - Windows are designed to regenerate when killed, forcing an external process termination
 - If a window is killed too quickly after regneration, property-not-found errors may arise due to incomplete initialization
+
+## Docker Support
+
+Docker is being considered as one of the Scale-AV global deployment strategies. Thus it would be convenient to use Docker to deploy the monitoring application.
+
+**Working Features:**
+- Build from Dockerfile
+- X11 support
+- Video
+
+**Known Bugs:**
+- DBus support
+- Audio
+
+
