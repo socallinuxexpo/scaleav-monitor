@@ -20,7 +20,7 @@ These instructions assume a Debian/Ubuntu system with Python 3 installed.
 **Installation:**
 ```
 sudo apt-get install -y git gir1.2-gtk-3.0 gir1.2-gst-plugins-base-1.0 python3-gi gstreamer-1.0 python3-gst-1.0 libcanberra-gtk3-module
-git clone https://github.com/LeStarch/gstreamer-pencil-tests.git
+git clone https://github.com/LeStarch/scaleav-monitor.git
 ```
 **Execution:**
 ```
