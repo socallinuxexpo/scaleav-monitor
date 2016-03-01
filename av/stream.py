@@ -37,24 +37,6 @@ class BaseStream(object):
             if index > 0:
                 self.pipeline.get_child_by_name(str(index-1)).link(elem)
         self.running = False
-    #def setSource(self,source,autoplay=False):
-    #    '''
-    #    Set the source of this pipeline. Will restart if already playing or
-    #    autoplay is set.
-    #    @param source - new source element
-    #    @param autoplay - should this start playing immediately
-    #    '''
-    #    if self.running is None:
-    #        raise StreamNotBuiltException()
-    #    run = (not self.running is None and self.running) or autoplay
-    #    self.stop()
-    #    time.sleep(1)
-    #    original = self.pipeline.get_child_by_name("0")
-    #    self.pipeline.remove(original)
-    #    self.pipeline.add(source,"0")
-    #    source.link(self.pipeline.get_child_by_name("1"))
-    #    if run:
-    #        self.start()
     def onSync(self,bus,msg):
         '''
         What to do on sync requests
