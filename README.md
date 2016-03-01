@@ -12,6 +12,9 @@ This repository holds the python, GStreamer, and GTK+ reworking of the ScaleAV v
 - **Python:** 
   A unified solution in python replaces a multi-language, multi-technology stack, which reduces the learning curve and minimizes the codebase. This allows for easier maintainability in a volunteer-staffed environment.
 
+## Design
+[[https://docs.google.com/drawings/d/173OipduHdTkx1bb0--o-LMuFIiH6ajzB7sv9MUP0DLI/pub?w=1355&h=763|alt=Design Image]]
+
 ## Installation and Execution
 
 These instructions assume a Debian/Ubuntu system with Python 3 installed.
