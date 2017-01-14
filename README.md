@@ -26,7 +26,7 @@ git clone https://github.com/LeStarch/scaleav-monitor.git
 ```
 **Execution:**
 ```
-cd gstreamer-pencil-tests
+cd scaleav-monitor
 python3 -m app.main
 ```
 
