@@ -2,7 +2,7 @@ import gi
 import time
 gi.require_version("Gst","1.0")
 from gi.repository import  Gst, GstVideo
-
+import sys
 class BaseStream(object):
     '''
     @author starchmd
@@ -32,10 +32,26 @@ class BaseStream(object):
         self.bus.connect("sync-message::element",self.onSync)
         #Build the stages 
         for index in range(0,len(stages)):
-            elem = Gst.ElementFactory.make(stages[index],str(index))
+            stage = stages[index]
+            elem = Gst.ElementFactory.make(stage["type"],stage["name"])
+            for name, prop in stage.items():
+                if name == "type" or name == "callback":
+                    continue
+                elem.set_property(name,prop) 
+            #Register callback on decode create
+            if "callback" in stage:
+                vartmp = stage
+                def on_new_decoded_pad(dbin, pad):
+                    decode = pad.get_parent()
+                    pipeline = decode.get_parent()
+                    cont = pipeline.get_by_name(vartmp["callback"])
+                    if pad.get_current_caps()[0].get_name().startswith("video"):
+                        decode.link(cont)
+                    #pipeline.set_state(gst.STATE_PLAYING)
+                elem.connect("pad-added", on_new_decoded_pad)
             self.pipeline.add(elem)
-            if index > 0:
-                self.pipeline.get_child_by_name(str(index-1)).link(elem)
+            if index > 0 and not "callback" in stages[index-1]:
+                self.pipeline.get_child_by_name(stages[index-1]["name"]).link(elem)
         self.running = False
     def onSync(self,bus,msg):
         '''

@@ -13,5 +13,5 @@ class Audio(av.stream.BaseStream):
         '''
         Initialize the GStreamer pipeline
         '''
-        stages = ["audiotestsrc","autoaudiosink"]
+        stages = [] #{"type":"audiotestsrc"},{"type":"autoaudiosink"}]
         super(Audio,self).__init__("Audio Pipeline",stages)

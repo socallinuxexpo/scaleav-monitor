@@ -6,14 +6,15 @@ class AVDisplay(graphics.base.BaseDisplay):
     @author starchmd
     A display that shows a video stream and plays audio only on focus.
     '''
-    def __init__(self,title):
+    def __init__(self,title,stream):
         '''
         Initialize the window
         @param title - name of window
         '''
         self.title = title
         super(AVDisplay,self).__init__(title)
-        self.av = av.av.AV(self)
+        #Pass in 'self' as window
+        self.av = av.av.AV(self,stream)
     def show(self):
         '''
         Start the main program
@@ -32,9 +33,9 @@ class AVDisplay(graphics.base.BaseDisplay):
        '''
        Focus change event
        '''
-       self.av.startAudio()
+       #self.av.startAudio()
     def focusOut(self,*args):
        '''
        Focus change event
        '''
-       self.av.stopAudio()
+       #self.av.stopAudio()
