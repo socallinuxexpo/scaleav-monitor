@@ -13,11 +13,15 @@ This repository holds the python, GStreamer, and GTK+ reworking of the ScaleAV v
   A unified solution in python replaces a multi-language, multi-technology stack, which reduces the learning curve and minimizes the codebase. This allows for easier maintainability in a volunteer-staffed environment.
 
 ## Design
-![Monitoring Design](https://docs.google.com/drawings/d/173OipduHdTkx1bb0--o-LMuFIiH6ajzB7sv9MUP0DLI/pub?w=1355&h=763 "ScaleAV Monitor Design")
+![Monitoring Design](https://docs.google.com/drawings/d/1FYnyoz1_jLDq2tF6BK0-b9wwbiFCWoeLrj8FOu2rJr8/pub?w=1273&h=867 "ScaleAV Monitor Design")
 ## Installation and Execution
 
 These instructions assume a Debian/Ubuntu system with Python 3 installed.
 **Note:** Only tested on Ubuntu
+
+**Configuration**
+
+config/rooms contains a list of stream urls (one per line).  To add or remove rooms, edit this file.
 
 **Installation:**
 ```
@@ -28,6 +32,11 @@ git clone https://github.com/LeStarch/scaleav-monitor.git
 ```
 cd scaleav-monitor
 python3 -m app.main
+```
+Alternatively one may run all rooms monitoring using bin/run.sh.
+```
+cd scaleav-monitor
+bin/run.sh
 ```
 
 ## Known Bugs
