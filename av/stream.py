@@ -9,12 +9,14 @@ class BaseStream(object):
     Base GStreamer stream
     '''
     running=None
-    def __init__(self,name,stages):
+    def __init__(self,name,stages,pipeline=None):
         '''
         Initializes this pipeline
         @param name - name of the pipeline
         @param stages - ordered list of gst elements names in the pipeline
         '''
+        self.stages = stages
+        self.pipeline = pipeline
         self.build(name,stages)
     def build(self,name,stages):
         '''
@@ -22,7 +24,9 @@ class BaseStream(object):
         @param name - name of the pipeline
         @param stages - ordered list of gst elements names in the pipeline
         '''
-        self.pipeline = Gst.Pipeline(name)
+        if self.pipeline is None:
+            self.pipeline = Gst.Pipeline(name)
+        print("Pipeline: ",name,"Stages:",stages)
         #Basic bus setup
         self.bus = self.pipeline.get_bus()
         self.bus.add_signal_watch()
@@ -35,24 +39,27 @@ class BaseStream(object):
             stage = stages[index]
             elem = Gst.ElementFactory.make(stage["type"],stage["name"])
             for name, prop in stage.items():
-                if name == "type" or name == "callback":
+                if name == "type" or name == "callback" or name == "nolink":
                     continue
                 elem.set_property(name,prop) 
             #Register callback on decode create
             if "callback" in stage:
                 vartmp = stage
+                print("Callback: ",stage)
                 def on_new_decoded_pad(dbin, pad):
                     decode = pad.get_parent()
                     pipeline = decode.get_parent()
-                    cont = pipeline.get_by_name(vartmp["callback"])
-                    if pad.get_current_caps()[0].get_name().startswith("video"):
-                        decode.link(cont)
-                    #pipeline.set_state(gst.STATE_PLAYING)
+                    vartmp["callback"](decode,pad)
                 elem.connect("pad-added", on_new_decoded_pad)
             self.pipeline.add(elem)
-            if index > 0 and not "callback" in stages[index-1]:
+            if index > 0 and not "callback" in stages[index-1] and not stages[index].get("nolink",False):
                 self.pipeline.get_child_by_name(stages[index-1]["name"]).link(elem)
         self.running = False
+    def getFirstStage(self):
+        '''
+        Get the first stage of this portion of the pipeline
+        '''
+        return self.pipeline.get_child_by_name(self.stages[0]["name"])
     def onSync(self,bus,msg):
         '''
         What to do on sync requests

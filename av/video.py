@@ -9,18 +9,14 @@ class Video(av.stream.BaseStream):
     @author starchmd
     Stream GStream pipline to window
     '''
-    def __init__(self,window,stream):
+    def __init__(self,window,pipeline):
         '''
         Initialize the GStreamer pipeline
         @param window - window object to draw to
         '''
         self.window = window
-        self.stream = stream
-        #stages = [{"type":"souphttpsrc","location":stream},{"type":"decodebin"},{"type":"ximagesink"}]
-        stages = [{"name":"soup-1","type":"souphttpsrc","location":stream},
-                  {"name":"decode-1","type":"decodebin","callback":"autosink-1"},
-                  {"name":"autosink-1","type":"autovideosink"}]
-        super(Video,self).__init__("Video Pipeline",stages)
+        stages = [{"name":"autosink-1","type":"xvimagesink"}]
+        super(Video,self).__init__("Video Pipeline",stages,pipeline)
          
     def onSync(self,bus,msg):
         '''

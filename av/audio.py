@@ -9,9 +9,9 @@ class Audio(av.stream.BaseStream):
     @author starchmd
     Audio stream for audio sink
     '''
-    def __init__(self):
+    def __init__(self,pipeline):
         '''
         Initialize the GStreamer pipeline
         '''
-        stages = [] #{"type":"audiotestsrc"},{"type":"autoaudiosink"}]
-        super(Audio,self).__init__("Audio Pipeline",stages)
+        stages = [{"name":"input-mux-1","type":"input-selector"},{"name":"audio-sink","type":"autoaudiosink"}]
+        super(Audio,self).__init__("Audio Pipeline",stages,pipeline)
