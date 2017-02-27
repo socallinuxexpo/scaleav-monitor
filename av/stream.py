@@ -3,6 +3,10 @@ import time
 gi.require_version("Gst","1.0")
 from gi.repository import  Gst, GstVideo
 import sys
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
 class BaseStream(object):
     '''
     @author starchmd
@@ -15,6 +19,7 @@ class BaseStream(object):
         @param name - name of the pipeline
         @param stages - ordered list of gst elements names in the pipeline
         '''
+        logging.debug("Building base stream")
         self.stages = stages
         self.pipeline = pipeline
         self.build(name,stages)
@@ -26,7 +31,7 @@ class BaseStream(object):
         '''
         if self.pipeline is None:
             self.pipeline = Gst.Pipeline(name)
-        print("Pipeline: ",name,"Stages:",stages)
+        logging.info("Building pipeline from: {0}".format(stages))
         #Basic bus setup
         self.bus = self.pipeline.get_bus()
         self.bus.add_signal_watch()
@@ -45,14 +50,15 @@ class BaseStream(object):
             #Register callback on decode create
             if "callback" in stage:
                 vartmp = stage
-                print("Callback: ",stage)
                 def on_new_decoded_pad(dbin, pad):
+                    logging.debug("Setting up dynamic pad: {0}".format(pad.get_name()))
                     decode = pad.get_parent()
                     pipeline = decode.get_parent()
                     vartmp["callback"](decode,pad)
                 elem.connect("pad-added", on_new_decoded_pad)
             self.pipeline.add(elem)
             if index > 0 and not "callback" in stages[index-1] and not stages[index].get("nolink",False):
+                logging.debug("Linking {0} to {1}".format(stages[index-1]["name"],elem.get_name()))
                 self.pipeline.get_child_by_name(stages[index-1]["name"]).link(elem)
         self.running = False
     def getFirstStage(self):
@@ -73,13 +79,15 @@ class BaseStream(object):
         @param bus - bus relaying message
         @param msg - message sent
         '''
-        print("Error:",msg.parse_error())
+        logging.warning("Error recieved on BUS: {0}".format(msg.parse_error()))
     def start(self):
         '''
         Runs the stream
         '''
         if self.running is None:
+            logging.warning("Trying to run an un-built stream")
             raise StreamNotBuiltException()
+        logging.info("Running pipeline: {0}".format(self.pipeline.get_name()))
         self.running = True
         self.pipeline.set_state(Gst.State.PLAYING)
     def stop(self):
@@ -87,7 +95,9 @@ class BaseStream(object):
         Stop the stream
         '''
         if self.running is None:
+            logging.warning("Trying to stop an un-built stream")
             raise StreamNotBuiltException()
+        logging.info("Stopping pipeline: {0}".format(self.pipeline.get_name()))
         self.pipeline.set_state(Gst.State.NULL)
         self.running = False
 class StreamNotBuiltException(Exception):

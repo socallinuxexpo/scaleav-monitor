@@ -1,6 +1,9 @@
 import gi
 gi.require_version("Gtk","3.0")
 from gi.repository import Gtk, Gdk, GdkX11
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 class BaseDisplay(object):
@@ -14,6 +17,7 @@ class BaseDisplay(object):
         Initialize the window
         @param title - name of window
         '''
+        logging.debug("Setting up base window")
         self.window = Gtk.Window()
         #Connect callbacks
         self.window.connect("destroy",self.destroy)
@@ -29,7 +33,7 @@ class BaseDisplay(object):
         self.window.set_title(title)
         self.title = title
         self.xid = None
-        print("Done supering:", self)
+        logging.debug("Done setting up base window")
     def makeMenu(self, drawArea, event):
         '''
         Generates a menu based on the GTK menu setup when the draw event
@@ -52,6 +56,7 @@ class BaseDisplay(object):
         A callback handling the GTK events and passing through to a callback
         that only needs to deal with the menu item name.
         '''
+        logging.debug("Menu click recieved: {0}".format(menuItem.get_label()))
         if event.type != Gdk.EventType.BUTTON_PRESS or event.button != 1:
             return
         self.menuCallback(menuItem.get_label())

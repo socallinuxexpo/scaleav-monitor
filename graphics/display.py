@@ -1,5 +1,8 @@
 import graphics.base
 import av.av
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 class AVDisplay(graphics.base.BaseDisplay):
     '''
@@ -11,18 +14,19 @@ class AVDisplay(graphics.base.BaseDisplay):
         Initialize the window
         @param title - name of window
         '''
-        print("I am for:",title,stream,self)
+        logging.debug("Setting up AV Display")
         self.title = title
         self.stream = stream
         super(AVDisplay,self).__init__(title)
         #Pass in 'self' as window
         self.av = av.av.AV(self,stream)
+        logging.debug("Done setting up AV Display")
         print("I am done for:",title,stream,self)
     def show(self):
         '''
         Start the main program
         '''
-        print("Showing:",self)
+        logging.debug("Showing AV display")
         super(AVDisplay,self).show()
         self.av.start() 
     def destroy(self,window):
@@ -30,31 +34,31 @@ class AVDisplay(graphics.base.BaseDisplay):
         Quit function, GTK quit callback
         @param window - supplied by Gtk, window object
         '''
-        print("Killing:",self)
+        logging.debug("Destroying AV Display, attempting recreation")
         try:
             self.av.stop()
             tmp = AVDisplay(self.title,self.stream)
             tmp.show()
-        except:
-            print("I AM MAD")
-            pass
+        except Exception as e:
+            logging.warning("Failed to stop AV and restart window. {0}:{1}".format(type(e),e))
     def focusIn(self,*args):
        '''
        Focus change event
        '''
-       print("Focus In:",self)
+       logging.debug("Focus in")
        self.av.startAudio()
     def focusOut(self,*args):
        '''
        Focus change event
        '''
-       print("Focus Out:",self)
+       logging.debug("Focus out")
        self.av.stopAudio()
     def menuCallback(self, item):
         '''
         A callback called when a menu item is clicked
         @param item: menu item name passed back
         '''
+        logging.debug("Switching audio to: {0}".format(item))
         self.av.switchAudios(item)
     def getMenuItems(self):
         '''

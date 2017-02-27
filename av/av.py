@@ -1,5 +1,8 @@
 import av.video
 import av.audio
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 class AV(av.stream.BaseStream):
     '''
     @author starchmd
@@ -11,6 +14,7 @@ class AV(av.stream.BaseStream):
         @param window - window object to draw to
         @param stream - AV stream URL to display
         '''
+        logging.debug("Building AV stream")
         self.stream = stream
         stages = [{"name":"soup-1","type":"souphttpsrc","location":stream},
         #stages = [{"name":"source-1","type":"videotestsrc"},
@@ -41,19 +45,12 @@ class AV(av.stream.BaseStream):
         '''
         if self.currentAudio is None:
             return
-        #self.stop()
-        #Unlink current
-        #pad = self.audios[self.currentAudio]
-        #parent.unlink(self.audio.getFirstStage())
         switch = self.audio.getFirstStage()
-        #switch.emit("block")
-        print("Doing: ",name)
         if name != "None":
             self.currentAudio = name
         pad = self.audios[name]
-        print("Switching to Pad: ",pad.get_name())
+        logging.debug("Switching to audio: {0}".format(pad.get_name()))
         switch.set_property("active-pad",pad)
-        #self.start()
     def startAudio(self):
         '''
         Start the audio
@@ -68,17 +65,19 @@ class AV(av.stream.BaseStream):
         '''
         Create a child page
         '''
-        print("CAPS:",pad.get_current_caps()[0].get_name())
         linkable = None
+        logging.debug("Creating dynamic link from type: {0}".format(pad.get_current_caps()[0].get_name()))
         if pad.get_current_caps()[0].get_name().startswith("video"):
+            logging.debug("Linking dynamic video")
             child = self.video.getFirstStage()
-            print("Linking video: ",child)
             parent.link(child)
         elif pad.get_current_caps()[0].get_name().startswith("audio"):
             active = "Audio-{0}".format(len(self.audios.keys()))
+            logging.debug("Linking dynamic audio from: {0}".format(active))
             switch = self.audio.getFirstStage()
             parent.link_pads(pad.get_name(),switch,None)
+            logging.debug("Assigning {0} to new pad: {1}".format(active,"sink_{0}".format(switch.get_property("n-pads")-1)))
             self.audios[active] = switch.get_static_pad("sink_{0}".format(switch.get_property("n-pads")-1))
-            print("Audio Active: ",self.audios[active].get_name())
             if self.currentAudio is None:
+                logging.debug("Setting active audio to: {0}".format(active))
                 self.currentAudio = active
