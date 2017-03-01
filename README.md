@@ -22,6 +22,7 @@ These instructions assume a Debian/Ubuntu system with Python 3 installed.
 **Configuration**
 
 config/rooms contains a list of stream urls (one per line).  To add or remove rooms, edit this file.
+bin/setRooms.sh  Take a list of conference room names and create a config/rooms file for a conference
 
 **Installation:**
 ```
@@ -38,6 +39,7 @@ Alternatively one may run all rooms monitoring using bin/run.sh.
 cd scaleav-monitor
 bin/run.sh
 ```
+
 
 ## Known Bugs
 - Windows are designed to regenerate when killed, forcing an external process termination
