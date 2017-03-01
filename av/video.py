@@ -19,7 +19,7 @@ class Video(av.stream.BaseStream):
         '''
         logging.debug("Setting up video stream")
         self.window = window
-        stages = [{"name":"autosink-1","type":"xvimagesink"}]
+        stages = [{"name":"autosink-1","type":"autovideosink"}]
         super(Video,self).__init__("Video Pipeline",stages,pipeline)
          
     def onSync(self,bus,msg):
