@@ -14,7 +14,7 @@ Room 212
 Ballroom A
 Ballroom B
 Ballroom C
-Balltoom DE
+Ballroom DE
 Ballroom F
 Ballroom G
 Ballroom H
