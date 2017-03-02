@@ -28,7 +28,7 @@ class BaseDisplay(object):
         self.area.set_double_buffered(True)
         self.area.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
         self.area.connect("button-press-event", self.makeMenu)
-        self.window.set_default_size(400, 300)
+        self.window.set_default_size(640, 360)
         self.window.add(self.area)
         self.window.set_title(title)
         self.title = title
