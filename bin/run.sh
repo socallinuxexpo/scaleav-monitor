@@ -8,6 +8,6 @@ DIR=`cd $DIR; pwd`
     do
         echo "Starting stream: ${stream}"
         python3 -m app.main ${stream} > "logs/${stream//\//_}.log" &
-        sleep 10
+        sleep 1
     done
 }
