@@ -33,7 +33,8 @@ sleep 3     # Give things time to close out before starting new streams
 NUM=1
 while [ $NUM -le $COUNT ] ; do
     echo "Starting stream $NUM"
-    $DEBUG $PLAYER $FILE --sout "#http{mux=ffmpeg{mux=flv},dst=:$PORT/}" &
+    $DEBUG $PLAYER $FILE --sout "#http{mux=ffmpeg{mux=flv},dst=:$PORT/}" \
+        2>&1 | grep -v 'Running vlc with the default interface' &
     sleep 0.4   # Don't hose the system
 
     PORT=`expr $PORT + 1`
