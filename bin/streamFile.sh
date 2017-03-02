@@ -27,7 +27,7 @@ fi
 
 # Shut down any running players
 killall $PLAYER
-sleep 3     # Give things time to close out before starting new streams
+sleep 5     # Give things time to close out before starting new streams
 
 # Create the requested number of streams
 NUM=1
