@@ -31,7 +31,7 @@ while [ $ROOM -le $ROOMCOUNT ] ; do
     echo "$ROOMS" | head -$ROOM | tail -1 | \
         tr '[:upper:]' '[:lower:]' | \
         sed -e 's/ /-/g' \
-            -e 's/$/.scaleav.us:8080\//' \
+            -e 's/$/.scaleav.us:8080\/mixed/' \
             -e 's/^/http:\/\//' \
         >> $FILE
     ROOM=`expr $ROOM + 1`
