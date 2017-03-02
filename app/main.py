@@ -8,8 +8,8 @@ Called by:    bin/run
 Arguments:    A single argument of the stream URL to display
 '''
 
-import graphics.gthread
-import graphics.display
+import graphics.gthread     # Use: loop()
+import graphics.display     # Use: AVDisplay(), show()
 import av.av
 import av.audio
 import sys
