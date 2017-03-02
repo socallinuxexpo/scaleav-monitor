@@ -1,6 +1,6 @@
 import gi
 gi.require_version("Gst","1.0")
-from gi.repository import  Gst, GstVideo
+from gi.repository import  GObject, Gst, GstVideo
 
 import av.stream
 import logging
@@ -19,7 +19,7 @@ class Video(av.stream.BaseStream):
         '''
         logging.debug("Setting up video stream")
         self.window = window
-        stages = [{"name":"autosink-1","type":"autovideosink"}]
+        stages = [{"name":"autosink-1","type":"xvimagesink"}]
         super(Video,self).__init__("Video Pipeline",stages,pipeline)
          
     def onSync(self,bus,msg):
@@ -30,7 +30,12 @@ class Video(av.stream.BaseStream):
         '''
         if msg.get_structure().get_name() == "prepare-window-handle":
             xid = self.window.getXId()
+            print("Self Message Source",xid, msg.src)
             if xid is None:
                 logging.warning("Started video stream before window creation")
                 raise Exception("Error: Stream play before window creation")
-            msg.src.set_window_handle(xid)
+            def setHandle(xid):
+                print("SETTING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",xid)
+                msg.src.set_window_handle(xid)
+            #GObject.idle_add(setHandle,xid)
+            setHandle(xid)

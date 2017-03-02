@@ -27,8 +27,13 @@ class AVDisplay(graphics.base.BaseDisplay):
         Start the main program
         '''
         logging.debug("Showing AV display")
-        super(AVDisplay,self).show()
+        super(AVDisplay,self).show(self.av)
+    def start(self):
+        '''
+        Start the stream running
+        '''
         self.av.start() 
+
     def destroy(self,window):
         '''
         Quit function, GTK quit callback
