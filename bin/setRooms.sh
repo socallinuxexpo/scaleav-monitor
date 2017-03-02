@@ -24,7 +24,7 @@ Extra 3'
 
 ROOMCOUNT=`echo "$ROOMS" | wc -l`
 
-mv $FILE $FILE.bk
+# mv $FILE $FILE.bk
 
 ROOM=1
 while [ $ROOM -le $ROOMCOUNT ] ; do
