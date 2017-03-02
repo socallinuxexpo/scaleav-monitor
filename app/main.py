@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+
+'''
+main.py
+Description:  Creates a GTK window, attaches a gstreamer AV stream then goes
+                  into the GTK main loop to service events and video frames
+Called by:    bin/run
+Arguments:    A single argument of the stream URL to display
+'''
+
 import graphics.gthread
 import graphics.display
 import av.av
@@ -23,3 +33,4 @@ if __name__ == "__main__":
         time.sleep(0.5)
     logging.info("Entering GTheard loop")
     graphics.gthread.loop()
+
