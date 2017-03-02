@@ -1,6 +1,6 @@
 import gi
 gi.require_version("Gtk","3.0")
-from gi.repository import Gtk, Gdk, GdkX11
+from gi.repository import GObject, Gtk, Gdk, GdkX11
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
@@ -60,13 +60,17 @@ class BaseDisplay(object):
         if event.type != Gdk.EventType.BUTTON_PRESS or event.button != 1:
             return
         self.menuCallback(menuItem.get_label())
-    def show(self):
+    def show(self,stream=None):
         '''
         Start the main program
         '''
         self.window.show_all()
         #Must be done on same thread as the above call, so cache here
         self.xid = self.area.get_window().get_xid()
+        if not stream is None:
+            def startStream(stream):
+                 stream.start()
+            GObject.idle_add(startStream,stream)
     def getXId(self):
         '''
         Gets the X11 window ID
