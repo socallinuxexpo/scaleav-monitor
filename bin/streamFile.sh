@@ -27,11 +27,14 @@ fi
 
 # Shut down any running players
 killall $PLAYER
+sleep 3     # Give things time to close out before starting new streams
 
 # Create the requested number of streams
 NUM=1
 while [ $NUM -le $COUNT ] ; do
+    echo "Starting stream $NUM"
     $DEBUG $PLAYER $FILE --sout "#http{mux=ffmpeg{mux=flv},dst=:$PORT/}" &
+    sleep 0.4   # Don't hose the system
 
     PORT=`expr $PORT + 1`
     NUM=`expr $NUM + 1`
