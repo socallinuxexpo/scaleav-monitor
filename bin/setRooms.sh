@@ -28,6 +28,7 @@ mv $FILE $FILE.bk
 
 ROOM=1
 while [ $ROOM -le $ROOMCOUNT ] ; do
+    echo -ne "$ROOM\t" >> $FILE
     echo "$ROOMS" | head -$ROOM | tail -1 | \
         tr '[:upper:]' '[:lower:]' | \
         sed -e 's/ /-/g' \
