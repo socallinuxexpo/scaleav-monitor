@@ -25,16 +25,20 @@ if [ -z "$PORT" ] ; then
     PORT=8080
 fi
 
-# Shut down any running players
-killall $PLAYER
-sleep 5     # Give things time to close out before starting new streams
+# Shut down any running players giving things time to close out
+PS='try'
+while [ -n "$PS" ] ; do
+    PS=`killall $PLAYER | grep 'no process found' 2>&1`
+    sleep 3
+done
 
 # Create the requested number of streams
 NUM=1
 while [ $NUM -le $COUNT ] ; do
     echo "Starting stream $NUM"
-    $DEBUG $PLAYER $FILE --sout "#http{mux=ffmpeg{mux=flv},dst=:$PORT/}" \
-        2>&1 | grep -v 'Running vlc with the default interface' &
+    $DEBUG $PLAYER $FILE --play-and-exit --sout \
+        "#http{mux=ffmpeg{mux=flv},dst=:$PORT/}" 2>&1 | \
+        grep -v 'Running vlc with the default interface' &
     sleep 0.4   # Don't hose the system
 
     PORT=`expr $PORT + 1`
