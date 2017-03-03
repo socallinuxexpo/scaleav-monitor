@@ -45,7 +45,9 @@ class BaseDisplay(object):
         #Create a new menu from the responded items
         self.menu = Gtk.Menu()
         for label in self.getMenuItems():
-            item = Gtk.MenuItem(label)
+            item = Gtk.CheckMenuItem(label)
+            if label == self.getCurrentItem():
+                 item.set_active(True)
             item.connect("button-press-event", self.menuClick)
             self.menu.append(item)
         #Force menu to pop up with all items displayed
@@ -59,6 +61,9 @@ class BaseDisplay(object):
         logging.debug("Menu click recieved: {0}".format(menuItem.get_label()))
         if event.type != Gdk.EventType.BUTTON_PRESS or event.button != 1:
             return
+        for item in self.menu:
+            item.set_active(False)
+        menuItem.set_active(True)
         self.menuCallback(menuItem.get_label())
     def show(self,stream=None):
         '''
@@ -106,3 +111,8 @@ class BaseDisplay(object):
         '''
         #Does nothing, reimplement in child class
         return []
+    def getCurrentItem(self):
+        '''
+        Gets item to be checked
+        '''
+        return None

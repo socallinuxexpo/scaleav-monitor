@@ -64,11 +64,15 @@ class AVDisplay(graphics.base.BaseDisplay):
         @param item: menu item name passed back
         '''
         logging.debug("Switching audio to: {0}".format(item))
-        self.av.switchAudios(item)
+        self.av.switchAudios(item,updateCurrent=True)
     def getMenuItems(self):
         '''
         Responds with the menu items that should be provided
         to select from
         '''
-        #Does nothing, reimplement in child class
         return self.av.getAudioStreams()
+    def getCurrentItem(self):
+        '''
+        Responds with the menu items that should be checked
+        '''
+        return self.av.getActiveStream()

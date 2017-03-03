@@ -38,7 +38,15 @@ class AV(av.stream.BaseStream):
         Get list of audio streams
         '''
         return sorted(self.audios.keys())
-    def switchAudios(self, name):
+    def getActiveStream(self):
+        '''
+        Get the current active stream
+        @return: current audio stream name
+        '''
+        if self.currentAudio is None:
+            return "None"
+        return self.currentAudio
+    def switchAudios(self, name, updateCurrent=False):
         '''
         Switch audio streams to named stream
         @param name: name of audio stream
@@ -46,7 +54,7 @@ class AV(av.stream.BaseStream):
         if self.currentAudio is None:
             return
         switch = self.audio.getFirstStage()
-        if name != "None":
+        if updateCurrent:
             self.currentAudio = name
         pad = self.audios[name]
         logging.debug("Switching to audio: {0}".format(pad.get_name()))
