@@ -1,6 +1,7 @@
 import gi
 gi.require_version("Gtk","3.0")
 from gi.repository import GObject, Gtk, Gdk, GdkX11
+import os
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
@@ -28,8 +29,14 @@ class BaseDisplay(object):
         self.area.set_double_buffered(True)
         self.area.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
         self.area.connect("button-press-event", self.makeMenu)
+        self.img = Gtk.Image.new_from_file(os.path.join(os.path.dirname(__file__),"..","img","stop.jpg"))
         self.window.set_default_size(640, 360)
-        self.window.add(self.area)
+        self.overlay = Gtk.Overlay()
+        self.overlay.add(self.area)
+        self.overlay.add_overlay(self.img)
+        self.overlay.set_overlay_pass_through(self.img, True)
+        #self.overlay.set_property("transparency",True)
+        self.window.add(self.overlay)
         self.window.set_title(title)
         self.title = title
         self.xid = None
@@ -74,6 +81,7 @@ class BaseDisplay(object):
         self.xid = self.area.get_window().get_xid()
         if not stream is None:
             def startStream(stream):
+                 self.img.hide()
                  stream.start()
             GObject.idle_add(startStream,stream)
     def getXId(self):

@@ -13,13 +13,14 @@ class BaseStream(object):
     Base GStreamer stream
     '''
     running=None
-    def __init__(self,name,stages,pipeline=None):
+    def __init__(self,name,stages,pipeline=None,onerror=lambda msg:1):
         '''
         Initializes this pipeline
         @param name - name of the pipeline
         @param stages - ordered list of gst elements names in the pipeline
         '''
         logging.debug("Building base stream")
+        self.onerror = onerror
         self.stages = stages
         self.pipeline = pipeline
         self.build(name,stages)
@@ -79,7 +80,8 @@ class BaseStream(object):
         @param bus - bus relaying message
         @param msg - message sent
         '''
-        logging.warning("Error recieved on BUS: {0}".format(msg.parse_error()))
+        logging.warning("Error received on BUS: {0}".format(msg.parse_error()))
+        self.onerror(msg)
     def start(self):
         '''
         Runs the stream

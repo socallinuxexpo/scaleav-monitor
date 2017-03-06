@@ -8,7 +8,7 @@ class AV(av.stream.BaseStream):
     @author starchmd
     A combined audio source and video stream
     '''
-    def __init__(self,window,stream):
+    def __init__(self,window,stream,onerror=lambda msg:1):
         '''
         Initialize the video, and the audio streams
         @param window - window object to draw to
@@ -16,7 +16,7 @@ class AV(av.stream.BaseStream):
         '''
         logging.debug("Building AV stream")
         self.stream = stream
-        stages = [{"name":"soup-1","type":"souphttpsrc","location":stream},
+        stages = [{"name":"soup-1","type":"souphttpsrc","location":stream,"timeout":1},
         #stages = [{"name":"source-1","type":"videotestsrc"},
                   {"name":"decode-1","type":"decodebin",
                       "callback": self.createChild},
@@ -26,7 +26,7 @@ class AV(av.stream.BaseStream):
         self.audio = None
         self.currentAudio = None
         self.window = window
-        super(AV,self).__init__("Global Pipeline",stages)
+        super(AV,self).__init__("Global Pipeline",stages,onerror=onerror)
         self.video = av.video.Video(self.window,self.pipeline)
         self.audio = av.audio.Audio(self.pipeline)
         switch = self.audio.getFirstStage()

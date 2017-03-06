@@ -1,6 +1,12 @@
 import graphics.base
 import av.av
+import os
 import logging
+import gi
+gi.require_version("Gst","1.0")
+from gi.repository import  GObject, Gst, GstVideo, Gtk
+
+RETRY_INTERVAL_MS=1000
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -19,9 +25,9 @@ class AVDisplay(graphics.base.BaseDisplay):
         self.stream = stream
         super(AVDisplay,self).__init__(title)
         #Pass in 'self' as window
-        self.av = av.av.AV(self,stream)
+        self.av = av.av.AV(self,stream,onerror=self.onError)
         logging.debug("Done setting up AV Display")
-        print("I am done for:",title,stream,self)
+        self.retrying = False
     def show(self):
         '''
         Start the main program
@@ -32,8 +38,38 @@ class AVDisplay(graphics.base.BaseDisplay):
         '''
         Start the stream running
         '''
+        self.img.hide()
         self.av.start() 
-
+    def onError(self,msg):
+        '''
+        What to do when the stream errors
+        @param msg: message containing error
+        '''
+        def showImg(param): 
+            self.img.show()
+        GObject.idle_add(showImg,None)
+        if self.retrying:
+            return
+        for message in ["Stream doesn't contain enough data", "Internal data flow error"]:
+            if message in str(msg.parse_error()):
+                break
+        else:
+            return
+        self.av.stop()
+        self.retrying = True
+        GObject.timeout_add(RETRY_INTERVAL_MS,self.retryConnection,None)
+    def retryConnection(self,data): 
+        '''
+        Retry connection on disconnect
+        '''
+        state = self.av.pipeline.get_state(0).state
+        print("State: {0}".format(state))
+        if state == Gst.State.PLAYING:
+            self.retrying = False
+            return False
+        self.av.stop()
+        self.start()
+        return True
     def destroy(self,window):
         '''
         Quit function, GTK quit callback
