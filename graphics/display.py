@@ -1,4 +1,5 @@
 import graphics.base
+import graphics.mason
 import av.av
 import os
 import logging
@@ -15,7 +16,7 @@ class AVDisplay(graphics.base.BaseDisplay):
     @author starchmd
     A display that shows a video stream and plays audio only on focus.
     '''
-    def __init__(self,title,stream):
+    def __init__(self, index, title, stream):
         '''
         Initialize the window
         @param title - name of window
@@ -23,7 +24,7 @@ class AVDisplay(graphics.base.BaseDisplay):
         logging.debug("Setting up AV Display")
         self.title = title
         self.stream = stream
-        super(AVDisplay,self).__init__(title)
+        super(AVDisplay,self).__init__(index, title)
         #Pass in 'self' as window
         logging.debug("Done setting up AV Display")
         self.retrying = False
@@ -85,7 +86,8 @@ class AVDisplay(graphics.base.BaseDisplay):
         try:
             if not self.av is None:
                 self.av.stop()
-            tmp = AVDisplay(self.title,self.stream)
+            tmp = AVDisplay(self.index, self.title, self.stream)
+            tmp.initial(*graphics.mason.WindowTiler().tile(self.index))
             tmp.show()
         except Exception as e:
             logging.warning("Failed to stop AV and restart window. {0}:{1}".format(type(e),e))

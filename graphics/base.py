@@ -13,11 +13,12 @@ class BaseDisplay(object):
     A base display window built on GTK containing a drawing area
     for GStream or anything else to draw in.
     '''
-    def __init__(self,title):
+    def __init__(self,index, title):
         '''
         Initialize the window
         @param title - name of window
         '''
+        self.index = index
         logging.debug("Setting up base window")
         self.window = Gtk.Window()
         #Connect callbacks
@@ -32,7 +33,6 @@ class BaseDisplay(object):
         self.area.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
         self.area.connect("button-press-event", self.makeMenu)
         self.img = Gtk.Image.new_from_file(os.path.join(os.path.dirname(__file__),"..","img","stop.jpg"))
-        self.window.set_default_size(640, 360)
         self.overlay = Gtk.Overlay()
         self.overlay.add(self.area)
         self.overlay.add_overlay(self.img)
@@ -42,6 +42,20 @@ class BaseDisplay(object):
         self.title = title
         self.xid = None
         logging.debug("Done setting up base window")
+        self.width = 1
+        self.height = 1
+    def initial(self, screen, x, y, width, height):
+        '''
+        Set the initial screen, x, y, width, and height of a screen
+        @param screen: screen to display on
+        @param x: x position
+        @param y: y position
+        @param width: width of window
+        @param height: height of window
+        '''
+        self.window.resize(width, height)
+        self.window.move(x, y)
+        self.window.set_screen(screen)
     def makeMenu(self, drawArea, event):
         '''
         Generates a menu based on the GTK menu setup when the draw event
