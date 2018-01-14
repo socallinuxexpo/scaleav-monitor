@@ -25,9 +25,10 @@ class AVDisplay(graphics.base.BaseDisplay):
         self.stream = stream
         super(AVDisplay,self).__init__(title)
         #Pass in 'self' as window
-        self.av = av.av.AV(self,stream,onerror=self.onError)
         logging.debug("Done setting up AV Display")
         self.retrying = False
+        self.av = None
+        self.start()
     def show(self):
         '''
         Start the main program
@@ -38,8 +39,12 @@ class AVDisplay(graphics.base.BaseDisplay):
         '''
         Start the stream running
         '''
-        self.img.hide()
-        self.av.start() 
+        if not self.av is None:
+            self.av.stop()
+        self.av = av.av.AV(self,self.stream,onerror=self.onError)
+        self.av.start()
+        if self.window.is_active():
+            self.av.startAudio() 
     def onError(self,msg):
         '''
         What to do when the stream errors
@@ -55,7 +60,8 @@ class AVDisplay(graphics.base.BaseDisplay):
                 break
         else:
             return
-        self.av.stop()
+        if not self.av is None:
+            self.av.stop()
         self.retrying = True
         GObject.timeout_add(RETRY_INTERVAL_MS,self.retryConnection,None)
     def retryConnection(self,data): 
@@ -65,9 +71,9 @@ class AVDisplay(graphics.base.BaseDisplay):
         state = self.av.pipeline.get_state(0).state
         print("State: {0}".format(state))
         if state == Gst.State.PLAYING:
+            self.img.hide()
             self.retrying = False
             return False
-        self.av.stop()
         self.start()
         return True
     def destroy(self,window):
@@ -77,7 +83,8 @@ class AVDisplay(graphics.base.BaseDisplay):
         '''
         logging.debug("Destroying AV Display, attempting recreation")
         try:
-            self.av.stop()
+            if not self.av is None:
+                self.av.stop()
             tmp = AVDisplay(self.title,self.stream)
             tmp.show()
         except Exception as e:
@@ -87,28 +94,35 @@ class AVDisplay(graphics.base.BaseDisplay):
        Focus change event
        '''
        logging.debug("Focus in")
-       self.av.startAudio()
+       if not self.av is None:
+           self.av.startAudio()
     def focusOut(self,*args):
        '''
        Focus change event
        '''
        logging.debug("Focus out")
-       self.av.stopAudio()
+       if not self.av is None:
+           self.av.stopAudio()
     def menuCallback(self, item):
         '''
         A callback called when a menu item is clicked
         @param item: menu item name passed back
         '''
         logging.debug("Switching audio to: {0}".format(item))
-        self.av.switchAudios(item,updateCurrent=True)
+        if not self.av is None:
+            self.av.switchAudios(item,updateCurrent=True)
     def getMenuItems(self):
         '''
         Responds with the menu items that should be provided
         to select from
         '''
+        if self.av is None:
+            return []
         return self.av.getAudioStreams()
     def getCurrentItem(self):
         '''
         Responds with the menu items that should be checked
         '''
+        if self.av is None:
+            return ""
         return self.av.getActiveStream()

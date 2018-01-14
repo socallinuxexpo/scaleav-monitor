@@ -22,6 +22,7 @@ class AV(av.stream.BaseStream):
                       "callback": self.createChild},
                   {"name":"test-src-1","type":"audiotestsrc","nolink":True,"volume":0}]
         self.audios = {}
+        self.aplay = False
         self.video = None
         self.audio = None
         self.currentAudio = None
@@ -51,23 +52,26 @@ class AV(av.stream.BaseStream):
         Switch audio streams to named stream
         @param name: name of audio stream
         '''
-        if self.currentAudio is None:
-            return
-        switch = self.audio.getFirstStage()
         if updateCurrent:
             self.currentAudio = name
-        pad = self.audios[name]
-        logging.debug("Switching to audio: {0}".format(pad.get_name()))
-        switch.set_property("active-pad",pad)
+        if self.currentAudio is None or not self.aplay:
+            return
+        switch = self.audio.getFirstStage()
+        pad = self.audios.get(name, None)
+        if not pad is None:
+            logging.debug("Switching to audio: {0}".format(pad.get_name()))
+            switch.set_property("active-pad",pad)
     def startAudio(self):
         '''
         Start the audio
         '''
+        self.aplay = True
         self.switchAudios(self.currentAudio) 
     def stopAudio(self):
         '''
         Stop the audio
         '''
+        self.aplay = False
         self.switchAudios("None")
     def createChild(self,parent,pad):
         '''
@@ -89,3 +93,6 @@ class AV(av.stream.BaseStream):
             if self.currentAudio is None:
                 logging.debug("Setting active audio to: {0}".format(active))
                 self.currentAudio = active
+            self.switchAudios(self.currentAudio)
+
+
