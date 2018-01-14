@@ -126,3 +126,14 @@ class AVDisplay(graphics.base.BaseDisplay):
         if self.av is None:
             return ""
         return self.av.getActiveStream()
+    def keyPressed(self, window, kevent):
+        '''
+        Handle number presses for switching audio.
+        '''
+        streams = self.av.getAudioStreams()
+        if kevent.keyval in [65456, 48] and len(streams) >= 1:
+            self.av.switchAudios(streams[len(streams) - 1], updateCurrent=True)
+        if kevent.keyval in [65457, 49] and len(streams) >= 2:
+            self.av.switchAudios(streams[0], updateCurrent=True)
+        if kevent.keyval in [65458, 50] and len(streams) >= 3:
+            self.av.switchAudios(streams[1], updateCurrent=True)

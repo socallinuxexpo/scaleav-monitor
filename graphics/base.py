@@ -21,9 +21,11 @@ class BaseDisplay(object):
         logging.debug("Setting up base window")
         self.window = Gtk.Window()
         #Connect callbacks
+        self.window.add_events(Gdk.EventMask.KEY_PRESS_MASK)
         self.window.connect("destroy",self.destroy)
         self.window.connect("focus-in-event",self.focusIn)
         self.window.connect("focus-out-event",self.focusOut)
+        self.window.connect("key-press-event", self.keyPressed)
         #Construct window with drawing area
         self.area = Gtk.DrawingArea()
         self.area.set_double_buffered(True)
@@ -35,7 +37,6 @@ class BaseDisplay(object):
         self.overlay.add(self.area)
         self.overlay.add_overlay(self.img)
         self.overlay.set_overlay_pass_through(self.img, True)
-        #self.overlay.set_property("transparency",True)
         self.window.add(self.overlay)
         self.window.set_title(title)
         self.title = title
@@ -124,3 +125,8 @@ class BaseDisplay(object):
         Gets item to be checked
         '''
         return None
+    def keyPressed(self, args, arg2):
+        '''
+        Do nothing key-press
+        '''
+        pass
