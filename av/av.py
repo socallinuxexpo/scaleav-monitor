@@ -8,7 +8,7 @@ class AV(av.stream.BaseStream):
     @author starchmd
     A combined audio source and video stream
     '''
-    def __init__(self,window,stream):
+    def __init__(self,window,stream,onerror=lambda msg:1):
         '''
         Initialize the video, and the audio streams
         @param window - window object to draw to
@@ -16,17 +16,18 @@ class AV(av.stream.BaseStream):
         '''
         logging.debug("Building AV stream")
         self.stream = stream
-        stages = [{"name":"soup-1","type":"souphttpsrc","location":stream},
+        stages = [{"name":"soup-1","type":"souphttpsrc","location":stream,"timeout":1},
         #stages = [{"name":"source-1","type":"videotestsrc"},
                   {"name":"decode-1","type":"decodebin",
                       "callback": self.createChild},
                   {"name":"test-src-1","type":"audiotestsrc","nolink":True,"volume":0}]
         self.audios = {}
+        self.aplay = False
         self.video = None
         self.audio = None
         self.currentAudio = None
         self.window = window
-        super(AV,self).__init__("Global Pipeline",stages)
+        super(AV,self).__init__("Global Pipeline",stages,onerror=onerror)
         self.video = av.video.Video(self.window,self.pipeline)
         self.audio = av.audio.Audio(self.pipeline)
         switch = self.audio.getFirstStage()
@@ -51,24 +52,27 @@ class AV(av.stream.BaseStream):
         Switch audio streams to named stream
         @param name: name of audio stream
         '''
-        if self.currentAudio is None:
-            return
-        switch = self.audio.getFirstStage()
         if updateCurrent:
             self.currentAudio = name
-        pad = self.audios[name]
-        logging.debug("Switching to audio: {0}".format(pad.get_name()))
-        switch.set_property("active-pad",pad)
+        if self.currentAudio is None or not self.aplay:
+            return
+        switch = self.audio.getFirstStage()
+        pad = self.audios.get(name, None)
+        if not pad is None:
+            logging.debug("Switching to audio: {0}".format(pad.get_name()))
+            switch.set_property("active-pad",pad)
     def startAudio(self):
         '''
         Start the audio
         '''
+        self.aplay = True
         self.switchAudios(self.currentAudio) 
     def stopAudio(self):
         '''
         Stop the audio
         '''
         self.switchAudios("None")
+        self.aplay = False
     def createChild(self,parent,pad):
         '''
         Create a child page
@@ -89,3 +93,6 @@ class AV(av.stream.BaseStream):
             if self.currentAudio is None:
                 logging.debug("Setting active audio to: {0}".format(active))
                 self.currentAudio = active
+            self.switchAudios(self.currentAudio)
+
+

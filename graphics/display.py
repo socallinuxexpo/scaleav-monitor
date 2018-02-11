@@ -1,6 +1,13 @@
 import graphics.base
+import graphics.mason
 import av.av
+import os
 import logging
+import gi
+gi.require_version("Gst","1.0")
+from gi.repository import  GObject, Gst, GstVideo, Gtk
+
+RETRY_INTERVAL_MS=1000
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -9,7 +16,7 @@ class AVDisplay(graphics.base.BaseDisplay):
     @author starchmd
     A display that shows a video stream and plays audio only on focus.
     '''
-    def __init__(self,title,stream):
+    def __init__(self, index, title, stream):
         '''
         Initialize the window
         @param title - name of window
@@ -17,11 +24,12 @@ class AVDisplay(graphics.base.BaseDisplay):
         logging.debug("Setting up AV Display")
         self.title = title
         self.stream = stream
-        super(AVDisplay,self).__init__(title)
+        super(AVDisplay,self).__init__(index, title)
         #Pass in 'self' as window
-        self.av = av.av.AV(self,stream)
         logging.debug("Done setting up AV Display")
-        print("I am done for:",title,stream,self)
+        self.retrying = False
+        self.av = None
+        self.start()
     def show(self):
         '''
         Start the main program
@@ -32,8 +40,43 @@ class AVDisplay(graphics.base.BaseDisplay):
         '''
         Start the stream running
         '''
-        self.av.start() 
-
+        if not self.av is None:
+            self.av.stop()
+        self.av = av.av.AV(self,self.stream,onerror=self.onError)
+        self.av.start()
+        if self.window.is_active():
+            self.av.startAudio() 
+    def onError(self,msg):
+        '''
+        What to do when the stream errors
+        @param msg: message containing error
+        '''
+        def showImg(param): 
+            self.img.show()
+        GObject.idle_add(showImg,None)
+        if self.retrying:
+            return
+        for message in ["Stream doesn't contain enough data", "Internal data flow error"]:
+            if message in str(msg.parse_error()):
+                break
+        else:
+            return
+        if not self.av is None:
+            self.av.stop()
+        self.retrying = True
+        GObject.timeout_add(RETRY_INTERVAL_MS,self.retryConnection,None)
+    def retryConnection(self,data): 
+        '''
+        Retry connection on disconnect
+        '''
+        state = self.av.pipeline.get_state(0).state
+        print("State: {0}".format(state))
+        if state == Gst.State.PLAYING:
+            self.img.hide()
+            self.retrying = False
+            return False
+        self.start()
+        return True
     def destroy(self,window):
         '''
         Quit function, GTK quit callback
@@ -41,8 +84,10 @@ class AVDisplay(graphics.base.BaseDisplay):
         '''
         logging.debug("Destroying AV Display, attempting recreation")
         try:
-            self.av.stop()
-            tmp = AVDisplay(self.title,self.stream)
+            if not self.av is None:
+                self.av.stop()
+            tmp = AVDisplay(self.index, self.title, self.stream)
+            tmp.initial(*graphics.mason.WindowTiler().tile(self.index))
             tmp.show()
         except Exception as e:
             logging.warning("Failed to stop AV and restart window. {0}:{1}".format(type(e),e))
@@ -50,29 +95,47 @@ class AVDisplay(graphics.base.BaseDisplay):
        '''
        Focus change event
        '''
-       logging.debug("Focus in")
-       self.av.startAudio()
+       if not self.av is None:
+           logging.debug("Attempting to start Audio")
+           self.av.startAudio()
     def focusOut(self,*args):
        '''
        Focus change event
        '''
-       logging.debug("Focus out")
-       self.av.stopAudio()
+       if not self.av is None:
+           logging.debug("Attempting to stop Audio")
+           self.av.stopAudio()
     def menuCallback(self, item):
         '''
         A callback called when a menu item is clicked
         @param item: menu item name passed back
         '''
         logging.debug("Switching audio to: {0}".format(item))
-        self.av.switchAudios(item,updateCurrent=True)
+        if not self.av is None:
+            self.av.switchAudios(item,updateCurrent=True)
     def getMenuItems(self):
         '''
         Responds with the menu items that should be provided
         to select from
         '''
+        if self.av is None:
+            return []
         return self.av.getAudioStreams()
     def getCurrentItem(self):
         '''
         Responds with the menu items that should be checked
         '''
+        if self.av is None:
+            return ""
         return self.av.getActiveStream()
+    def keyPressed(self, window, kevent):
+        '''
+        Handle number presses for switching audio.
+        '''
+        streams = self.av.getAudioStreams()
+        if kevent.keyval in [65456, 48] and len(streams) >= 1:
+            self.av.switchAudios(streams[len(streams) - 1], updateCurrent=True)
+        if kevent.keyval in [65457, 49] and len(streams) >= 2:
+            self.av.switchAudios(streams[0], updateCurrent=True)
+        if kevent.keyval in [65458, 50] and len(streams) >= 3:
+            self.av.switchAudios(streams[1], updateCurrent=True)

@@ -35,7 +35,6 @@ class Video(av.stream.BaseStream):
                 logging.warning("Started video stream before window creation")
                 raise Exception("Error: Stream play before window creation")
             def setHandle(xid):
-                print("SETTING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",xid)
                 msg.src.set_window_handle(xid)
             #GObject.idle_add(setHandle,xid)
             setHandle(xid)
