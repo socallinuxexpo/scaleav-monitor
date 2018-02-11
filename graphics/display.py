@@ -95,15 +95,15 @@ class AVDisplay(graphics.base.BaseDisplay):
        '''
        Focus change event
        '''
-       logging.debug("Focus in")
        if not self.av is None:
+           logging.debug("Attempting to start Audio")
            self.av.startAudio()
     def focusOut(self,*args):
        '''
        Focus change event
        '''
-       logging.debug("Focus out")
        if not self.av is None:
+           logging.debug("Attempting to stop Audio")
            self.av.stopAudio()
     def menuCallback(self, item):
         '''

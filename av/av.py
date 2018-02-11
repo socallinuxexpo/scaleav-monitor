@@ -71,8 +71,8 @@ class AV(av.stream.BaseStream):
         '''
         Stop the audio
         '''
-        self.aplay = False
         self.switchAudios("None")
+        self.aplay = False
     def createChild(self,parent,pad):
         '''
         Create a child page
