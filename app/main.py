@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 '''
 main.py
 Description:  Creates a GTK window, attaches a gstreamer AV stream then goes
