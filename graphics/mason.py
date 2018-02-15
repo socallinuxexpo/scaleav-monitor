@@ -51,7 +51,7 @@ class WindowTiler(object):
                 xpos = X_MARGIN
                 ypos = Y_MARGIN
             index = index - 1
-        return (screen, (xpos, ypos), (DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT))
+        return (self.screens[screen], (xpos, ypos), (DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT))
     def unindexed_tile(self):
         '''
         Get position in untiled space
