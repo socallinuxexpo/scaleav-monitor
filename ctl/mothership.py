@@ -6,7 +6,6 @@ Mothership control code
 '''
 import os
 import sys
-import time
 import subprocess
 import functools
 class MothershipControl(object):
@@ -28,8 +27,8 @@ class MothershipControl(object):
         '''
         self.display.lock()
         seq = 1
-        with open(config, "r") as fp:
-            for line in fp.readlines():
+        with open(config, "r") as fptr:
+            for line in fptr.readlines():
                 spl = line.split()
                 if len(spl) != 2:
                     raise Exception("Invalid config file format: [{0}]".format(line))
@@ -46,16 +45,19 @@ class MothershipControl(object):
         @param key: key to index for host to start
         '''
         if not self.rooms[key]["process"] is None and self.rooms[key]["process"].poll() is None:
-            raise Exception("Restarting already running process: {0}-{1}".format(key, self.rooms[key]["host"]))
+            raise Exception("Restarting running job: {0}-{1}".format(key, self.rooms[key]["host"]))
         self.rooms[key]["process"] = subprocess.Popen(["python3", "-m", "app.main",
-             self.rooms[key]["index"], self.rooms[key]["host"]], cwd=os.path.join(os.path.dirname(__file__),".."))
+                                                       self.rooms[key]["index"],
+                                                       self.rooms[key]["host"]],
+                                                      cwd=os.path.join(os.path.dirname(__file__),
+                                                                       ".."))
     def restart_all(self):
         '''
         Restarts all processes
         '''
         self.display.lock()
         self.stop_all()
-        for key in self.rooms.keys():
+        for key in self.rooms:
             self.start(key)
         self.display.unlock()
     def stop(self, key):
@@ -71,7 +73,7 @@ class MothershipControl(object):
         '''
         Stops all processes
         '''
-        for key in self.rooms.keys():
+        for key in self.rooms:
             self.stop(key)
     def shutdown(self):
         '''
