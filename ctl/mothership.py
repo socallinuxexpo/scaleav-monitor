@@ -1,7 +1,7 @@
 '''
 Mothership control code
 
-@author lestarch, mescoops
+@author starchmd, mescoops
 @date 2018-02-10
 '''
 import os
@@ -11,6 +11,8 @@ import functools
 class MothershipControl(object):
     '''
     Control class for mothership
+    @author starchmd, mescoops
+    @date 2018-02-10
     '''
     def __init__(self, display):
         '''

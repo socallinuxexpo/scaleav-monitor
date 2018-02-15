@@ -1,7 +1,7 @@
 '''
 Module controlling the setup of the audio portion of the stream.
 
-@author: lestarch
+@author: starchmd
 @date: 2018-02-14 (refactor)
 '''
 import logging

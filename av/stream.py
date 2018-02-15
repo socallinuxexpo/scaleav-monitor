@@ -1,7 +1,7 @@
 '''
 Base stream class used to handle the basic functions of GST processing.
 
-@author mstarch
+@author starchmd
 @data: 2018-02-14 (refactor)
 '''
 import logging

@@ -1,7 +1,7 @@
 '''
 Mothership display application
 
-@author lestarch, mescoops
+@author starchmd, mescoops
 @date 2018-02-10
 '''
 from __future__ import print_function

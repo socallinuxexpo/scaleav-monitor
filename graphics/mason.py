@@ -1,6 +1,6 @@
 '''
 Tiler used to place windows deterministically, along with constants required.
-@author lestarch
+@author starchmd
 @datw 2018-02-13 (refactor)
 '''
 import logging

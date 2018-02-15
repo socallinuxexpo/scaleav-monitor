@@ -1,6 +1,6 @@
 '''
 Main graphics loop code.
-@author lestarch
+@author starchmd
 @date 2018-02-13 (refactor)
 '''
 import gi

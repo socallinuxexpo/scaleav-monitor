@@ -1,6 +1,6 @@
 '''
 Code for displaying mothership's main window with buttons, sliders, etc.
-@author lestarch, mescoops
+@author starchmd, mescoops
 @date 2018-02-10
 '''
 import functools
@@ -15,7 +15,7 @@ class MothershipDisplay(graphics.base.BaseDisplay):
     controls
 
     @date 2018-02-10
-    @author lestarch, mescoops
+    @author starchmd, mescoops
     '''
     def __init__(self, title):
         '''
