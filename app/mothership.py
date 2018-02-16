@@ -19,11 +19,10 @@ def mothership(config):
 
     <room number>	<room video url>
     '''
-    position = 3
     tiler = graphics.mason.WindowTiler()
     display = graphics.mothership.MothershipDisplay("Mothership Control")
     control = ctl.mothership.MothershipControl(display)
-    display.initial(*tiler.tile(position))
+    display.initial(*tiler.unindexed_tile())
     control.configure(config)
     display.show()
     graphics.gthread.loop()

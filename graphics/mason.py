@@ -16,6 +16,9 @@ DEFAULT_WINDOW_HEIGHT = 360
 X_MARGIN = 0
 Y_MARGIN = 0
 
+X_RIGHT_MARGIN = 300
+
+
 class WindowTiler(object):
     '''
     Setup a window tiler based around the default screen
@@ -40,7 +43,7 @@ class WindowTiler(object):
         ypos = Y_MARGIN
         while index > 0:
             xpos = xpos + DEFAULT_WINDOW_WIDTH
-            if xpos + DEFAULT_WINDOW_WIDTH > self.screens[screen].get_width():
+            if xpos + DEFAULT_WINDOW_WIDTH > self.screens[screen].get_width() - X_RIGHT_MARGIN:
                 ypos = ypos + DEFAULT_WINDOW_HEIGHT
                 xpos = X_MARGIN
             if ypos + DEFAULT_WINDOW_HEIGHT > self.screens[screen].get_height():
@@ -57,4 +60,4 @@ class WindowTiler(object):
         Get position in untiled space
         @return (x, y, height, wdith) where the window should be (untiled)
         '''
-        return (0, 0, 1, 1)
+        return (self.screens[-1], (self.screens[-1].get_width() - X_RIGHT_MARGIN, 0), (X_RIGHT_MARGIN, 0))
