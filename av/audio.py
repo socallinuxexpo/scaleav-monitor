@@ -6,8 +6,7 @@ Module controlling the setup of the audio portion of the stream.
 '''
 import logging
 import av.stream
-
-logging.basicConfig(level=logging.DEBUG)
+import util.log
 
 class Audio(av.stream.BaseStream):
     '''

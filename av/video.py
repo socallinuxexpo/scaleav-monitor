@@ -7,8 +7,7 @@ pipeline.
 '''
 import logging
 import av.stream
-
-logging.basicConfig(level=logging.DEBUG)
+import util.log
 
 class Video(av.stream.BaseStream):
     '''

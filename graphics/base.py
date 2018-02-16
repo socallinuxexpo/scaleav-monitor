@@ -9,9 +9,7 @@ import logging
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk
-
-logging.basicConfig(level=logging.DEBUG)
-
+import util.log
 
 class BaseDisplay(object):
     '''
@@ -116,7 +114,7 @@ class DrawableDisplay(BaseDisplay):
         Gets the X11 window ID
         '''
         return self.xid
-    def build_menu(self, event):
+    def build_menu(self, area, event):
         '''
         Builds the menu upon creation during a right click
         @param event: click event triggering this

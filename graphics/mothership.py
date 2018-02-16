@@ -27,6 +27,7 @@ class MothershipDisplay(graphics.base.BaseDisplay):
         self.restartcb = lambda: True
         super(MothershipDisplay, self).__init__(title)
         #Set window boarder
+        self.window.connect('delete_event', lambda x, y: True)
         self.window.set_border_width(15)
         buttonbox = Gtk.Box(spacing=6)
         #Add global buttons

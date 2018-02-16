@@ -5,10 +5,9 @@ Tiler used to place windows deterministically, along with constants required.
 '''
 import logging
 import gi
-gi.require_version("Gtk", "3.0")
+gi.require_version("Gdk", "3.0")
 from gi.repository import Gdk
-
-logging.basicConfig(level=logging.DEBUG)
+import util.log
 
 DEFAULT_WINDOW_WIDTH = 640
 DEFAULT_WINDOW_HEIGHT = 360
