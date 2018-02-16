@@ -7,9 +7,8 @@ Base stream class used to handle the basic functions of GST processing.
 import logging
 import gi
 gi.require_version("Gst", "1.0")
-from gi.repository import  Gst
-
-logging.basicConfig(level=logging.DEBUG)
+from gi.repository import  Gst, GstVideo
+import util.log
 
 class BaseStream(object):
     '''
@@ -77,7 +76,7 @@ class BaseStream(object):
             logging.debug("Setting up dynamic pad: %s on %s", pad.get_name(), dbin.get_name())
             decode = pad.get_parent()
             #pipeline = decode.get_parent()
-            stage(decode, pad)
+            stage["callback"](decode, pad)
         elem.connect("pad-added", on_new_decoded_pad)
 
     def get_first_stage(self):

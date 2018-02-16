@@ -5,10 +5,9 @@ import av.av
 import gi
 gi.require_version("Gst", "1.0")
 from gi.repository import  GObject, Gst
+import util.log
 
 RETRY_INTERVAL_MS = 1000
-
-logging.basicConfig(level=logging.DEBUG)
 
 class AVDisplay(graphics.base.DrawableDisplay):
     '''

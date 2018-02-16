@@ -4,6 +4,7 @@ Main graphics loop code.
 @date 2018-02-13 (refactor)
 '''
 import gi
+gi.require_version("Gtk", "3.0")
 gi.require_version("Gst", "1.0")
 from gi.repository import GObject, Gtk, Gst
 #Global initializations

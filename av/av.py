@@ -7,8 +7,8 @@ Module containing the functions for build a combined audio/visual stream.
 import logging
 import av.video
 import av.audio
+import util.log
 
-logging.basicConfig(level=logging.DEBUG)
 class AV(av.stream.BaseStream):
     '''
     @author starchmd

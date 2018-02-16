@@ -9,12 +9,11 @@ Arguments:    A single argument of the stream URL to display
 import sys
 import urllib.parse
 import logging
+import util.log
 import graphics.gthread     # Use: loop()
 import graphics.display     # Use: AVDisplay(), show()
 import graphics.mason
 
-
-logging.basicConfig(level=logging.DEBUG)
 def main():
     '''
     Main program. Hi Lewis!!!
