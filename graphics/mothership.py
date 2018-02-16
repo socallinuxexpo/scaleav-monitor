@@ -3,6 +3,7 @@ Code for displaying mothership's main window with buttons, sliders, etc.
 @author starchmd, mescoops
 @date 2018-02-10
 '''
+import os
 import functools
 import gi
 gi.require_version("Gtk", "3.0")
@@ -38,8 +39,12 @@ class MothershipDisplay(graphics.base.BaseDisplay):
         button.connect("clicked", self.restart)
         buttonbox.pack_start(button, True, True, 0)
         self.buttons.append(button)
+        #Load image to display at top of controls
+        logo = Gtk.Image.new_from_file(os.path.join(os.path.dirname(__file__),
+                                                        "..", "img", "16x_logo_sm.png"))
         #Virtival display box
         self.roombox = Gtk.Box(spacing=6, orientation=Gtk.Orientation.VERTICAL)
+        self.roombox.pack_start(logo, False, True, 0)
         self.roombox.pack_end(buttonbox, False, True, 0)
         self.window.add(self.roombox)
     def initial(self, screen, position, dimension):
