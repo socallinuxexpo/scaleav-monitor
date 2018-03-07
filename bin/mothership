@@ -1,0 +1,8 @@
+#!/bin/bash
+DIR=`dirname $BASH_SOURCE`/..
+LOG=`cd $DIR; pwd`/logs
+mkdir -p $LOG
+(
+  cd $DIR
+  python3 -m app.mothership > $LOG/mothership.log
+)
