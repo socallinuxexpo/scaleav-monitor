@@ -2,6 +2,44 @@
 
 **Note:** This is a work in progress, designed in preparation for Scale 15x (March, 2017).
 
+## Checkout and Installation
+
+Ubuntu is recommended as an Operating System, other linux variants may work but are not guarenteed. This code requires many specific packages to handle media and GUI interaction.
+
+Install and clone on Ubuntu using the following instructions:
+```
+sudo apt-get install -y git gir1.2-gtk-3.0 gir1.2-gst-plugins-base-1.0 python3-gi gstreamer-1.0 python3-gst-1.0 libcanberra-gtk3-module gstreamer1.0-vaapi
+git clone https://github.com/LeStarch/scaleav-monitor.git
+```
+
+## Execution:
+
+**Note:** this system requires intel chips (newer i5 and i7) that have a built in decoder for H264 video to run at full scale. It is recommended that the configuration be set to one stream when running off this hardware and for development.
+```
+cd scaleav-monitor/bin
+./mothership
+```
+
+## Contribution
+
+To contrubue to this project, please create a branch in your git repository, make the change, and then push up to GitHub. Then create a pull request describing the work, any notes/caveates, and submit it. We will review it together and pull it into the master branch when the work is completed.
+
+## Configuration
+
+config/rooms contains a list of stream urls (one per line).  To add or remove rooms, edit this file. Lines follow the following format:
+
+```
+<index> <room-video-url>
+i.e.
+0 http://example.com:8080/mixed
+```
+
+## Testing
+
+TBD
+
+
+## Description
 
 This repository holds the python, GStreamer, and GTK+ reworking of the ScaleAV video stream monitoring software. This solution has several advantages above the original solution:
 
@@ -18,28 +56,6 @@ This repository holds the python, GStreamer, and GTK+ reworking of the ScaleAV v
 
 These instructions assume a Debian/Ubuntu system with Python 3 installed.
 **Note:** Only tested on Ubuntu
-
-**Configuration**
-
-config/rooms contains a list of stream urls (one per line).  To add or remove rooms, edit this file.<br>
-bin/setRooms.sh  Take a list of conference room names and create a config/rooms file for a conference
-
-**Installation:**
-```
-sudo apt-get install -y git gir1.2-gtk-3.0 gir1.2-gst-plugins-base-1.0 python3-gi gstreamer-1.0 python3-gst-1.0 libcanberra-gtk3-module gstreamer1.0-vaapi
-git clone https://github.com/LeStarch/scaleav-monitor.git
-```
-**Execution:**
-```
-cd scaleav-monitor
-python3 -m app.main
-```
-Alternatively one may run all rooms monitoring using bin/run.sh.
-```
-cd scaleav-monitor
-bin/run.sh
-```
-
 
 ## Known Bugs
 - Windows are designed to regenerate when killed, forcing an external process termination
