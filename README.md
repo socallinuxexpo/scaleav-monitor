@@ -1,8 +1,8 @@
 # Scale-AV Monitoring Computer
 
-**Note:** This is a work in progress, designed in preparation for Scale 15x (March, 2017).
+**Note:** this system requires intel chips (newer i5 and i7) that have a built in decoder for H264 video to run at full scale. It is recommended that the configuration be set to one stream when running off this hardware and for development.
 
-## Checkout and Installation
+## Checkout and Installation (Ubuntu Only)
 
 Ubuntu is recommended as an Operating System, other linux variants may work but are not guarenteed. This code requires many specific packages to handle media and GUI interaction.
 
@@ -14,7 +14,7 @@ git clone https://github.com/LeStarch/scaleav-monitor.git
 
 ## Execution:
 
-**Note:** this system requires intel chips (newer i5 and i7) that have a built in decoder for H264 video to run at full scale. It is recommended that the configuration be set to one stream when running off this hardware and for development.
+To run the software:
 ```
 cd scaleav-monitor/bin
 ./mothership
@@ -22,8 +22,19 @@ cd scaleav-monitor/bin
 
 ## Contribution
 
-To contrubue to this project, please create a branch in your git repository, make the change, and then push up to GitHub. Then create a pull request describing the work, any notes/caveates, and submit it. We will review it together and pull it into the master branch when the work is completed.
+To contribute to this project, please create a branch in your git repository, make the change, test it using the following basic test procedure (see Testing), and then push the branch to GitHub. Then create a pull request describing the work, any notes/caveates, testing performed, and submit it. We will review it together and pull it into the master branch when the work is completed.
 
+In the scaleav-monitor repository checkout:
+```
+git checkout -b "<username>/<brief-description-of-work>
+<do work>
+git push -u origin <branch name>
+...
+i.e.
+git checkout -b "mstarch/fixing-push-button"
+<do work and test>
+git push -u origin mstarch/fixing-push-button
+```
 ## Configuration
 
 config/rooms contains a list of stream urls (one per line).  To add or remove rooms, edit this file. Lines follow the following format:
