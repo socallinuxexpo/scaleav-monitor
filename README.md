@@ -37,7 +37,7 @@ git push -u origin mstarch/fixing-push-button
 ```
 ## Configuration
 
-config/rooms contains a list of stream urls (one per line).  To add or remove rooms, edit this file. Lines follow the following format:
+`config/rooms` contains a list of stream urls (one per line).  To add or remove rooms, edit this file. Lines follow the following format:
 
 ```
 <index> <room-video-url>
