@@ -81,26 +81,27 @@ cvlc 20150111_150020.mp4 --loop --sout='#http{mux=ffmpeg{mux=flv},dst=:8080/mixe
 vlc
 ```
   - Media -> Stream...
-  - File tab -> Add...
-  - Browse to the test video downloaded in the step above
-![VLC Open Media]("markup/VLC Open Media.png")
-  - Open
-  - Stream
-  - Next
-  - Select format = http
-![VLC Destination]("markup/VLC Destination.png")
-  - Add
-  - Set path to /mixed, port to 8080
-![VLC Destination 2]("markup/VLC Destination 2.png")
-  - Next
-  - Deselect active transcoding
-![VLC Output]("markup/VLC Output.png")
-  - Select profile "Video - H.264 + MP3 (MP4)"
-  - Next
-  - Deselect Stream all elementary streams
-![VLC Output 2]("markup/VLC Output 2.png")
-  - Copy the generated stream output string for command line use
-  - Stream
+  - File tab<br>
+    ![VLC Open Media](markup/VLC%20Open%20Media.png)
+    - [ Add ]
+      - Browse to the test video downloaded in the step above
+      - [ Open ]
+  - [ Stream ]
+  - [ Next ]
+    - Select format = http
+    ![VLC Destination](markup/VLC%20Destination.png)
+    - [ Add ]
+      - Set path to /mixed, port to 8080
+      ![VLC Destination 2](markup/VLC%20Destination%202.png)
+  - [ Next ]
+    - Deselect active transcoding
+    - Select profile "Video - H.264 + MP3 (MP4)"
+    ![VLC Output](markup/VLC%20Output.png)
+  - [ Next ]
+    - Deselect Stream all elementary streams
+    ![VLC Output 2](markup/VLC%20Output%202.png)
+    - Copy the generated stream output string for command line use
+  - [ Stream ]
 
 ### Run the software to monitor the test signal
 ```
