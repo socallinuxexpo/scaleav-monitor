@@ -83,17 +83,22 @@ vlc
   - Media -> Stream...
   - File tab -> Add...
   - Browse to the test video downloaded in the step above
+![VLC Open Media]("markup/VLC Open Media.png")
   - Open
   - Stream
   - Next
   - Select format = http
+![VLC Destination]("markup/VLC Destination.png")
   - Add
   - Set path to /mixed, port to 8080
+![VLC Destination 2]("markup/VLC Destination 2.png")
   - Next
   - Deselect active transcoding
+![VLC Output]("markup/VLC Output.png")
   - Select profile "Video - H.264 + MP3 (MP4)"
   - Next
   - Deselect Stream all elementary streams
+![VLC Output 2]("markup/VLC Output 2.png")
   - Copy the generated stream output string for command line use
   - Stream
 
