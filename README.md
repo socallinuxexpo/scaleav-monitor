@@ -1,24 +1,130 @@
-# Scale-AV Monitoring Computer
+# Setting up the Scale-AV Monitoring Computer
 
-**Note:** this system requires intel chips (newer i5 and i7) that have a built in decoder for H264 video to run at full scale. It is recommended that the configuration be set to one stream when running off this hardware and for development.
+**n.b.** These instructions have been tested on Ubuntu.  Other linux variants may work but results are not tested or guarenteed. This code requires many specific packages to handle media and GUI interaction.
 
-## Checkout and Installation (Ubuntu Only)
+**n.b.** this system requires intel chips (newer i5 and i7) that have the hardware decoder for H264 video. It is recommended that the configuration be set to one stream for development and testing.
 
-Ubuntu is recommended as an Operating System, other linux variants may work but are not guarenteed. This code requires many specific packages to handle media and GUI interaction.
+# Installation
+## Operating system configuration
+- Install the latest Ubuntu release
+- Select the full installation, not the minimal installation
+- Select installing encumbered software to get the video tools
+- When prompted remove the installation media and reboot
+- Let updates install, you may be prompted to reboot again
+- Update the OS
+...
+sudo apt upgrade
+...
+- Install the required packages
+...
+sudo apt install vlc git gir1.2-gtk-3.0 gir1.2-gst-plugins-base-1.0 python3-gi gstreamer-1.0 python3-gst-1.0 libcanberra-gtk3-module gstreamer1.0-vaapi
+...
+- Install proprietary video drivers
+  - From the launcer open 'Software & updates'
+    - On the 'Additional Drivers' tab select 'Using NVIDIA driver...'
+    - Select Apply Changes
+    - Select Close
 
-Install and clone on Ubuntu using the following instructions:
-```
-sudo apt-get install -y git gir1.2-gtk-3.0 gir1.2-gst-plugins-base-1.0 python3-gi gstreamer-1.0 python3-gst-1.0 libcanberra-gtk3-module gstreamer1.0-vaapi
-git clone https://github.com/LeStarch/scaleav-monitor.git
-```
+## Make sure the video drivers were recognized
+...
+sudo apt install vainfo
+...
+Verify that the nvidia driver is selected (not nouveau) and that VDPAU is being used
+...
+sudo vainfo
+  libva info: Trying to open /usr/lib/x86_64-linux-gnu/dri/nvidia_drv_video.so
+  Driver version: Splitted-Desktop Systems VDPAU backend for VA-API - 0.7.4
+...
 
-## Execution:
+# Install the ScaleAV software
+## Clone the git repository
+...
+cd ~
+mkdir code
+cd code
+git clone https://github.com/socallinuxexpo/scaleav-monitor.git
+cd scaleav-monitor
+...
 
-To run the software:
-```
-cd scaleav-monitor/bin
-./mothership
-```
+## Set up the rooms to monitor
+...
+vi config/rooms
+...
+...
+0	http://monitor3:8080/mixed
+...
+
+# Test streaming
+## Set up a test streaming source
+- Download an mp4 sample file, we use Mike's ~/20150111_150020.mp4
+- Stream the test video from the command line
+...
+cvlc 20150111_150020.mp4 --loop --sout='#http{mux=ffmpeg{mux=flv},dst=:8080/mixed}'
+...
+- Or stream using the VLC GUI
+...
+vlc
+...
+  - Media -> Stream...
+  - File tab -> Add...
+  - Browse to the test video downloaded in the step above
+  - Open
+  - Stream
+  - Next
+  - Select format = http
+  - Add
+  - Set path to /mixed, port to 8080
+  - Next
+  - Deselect active transcoding
+  - Select profile "Video - H.264 + MP3 (MP4)"
+  - Next
+  - Deselect Stream all elementary streams
+  - Copy the generated stream output string for command line use
+  - Stream
+
+## Run the software to monitor the test signal
+...
+bin/mothership 
+...
+
+# Execution:
+## Set up the rooms to monitor
+...
+vi config/rooms
+...
+...
+0	http://room-101.scaleav.us:8080/mixed
+1	http://room-103.scaleav.us:8080/mixed
+2	http://room-107.scaleav.us:8080/mixed
+3	http://room-104.scaleav.us:8080/mixed
+4	http://room-106.scaleav.us:8080/mixed
+5	http://room-211.scaleav.us:8080/mixed
+6	http://room-212.scaleav.us:8080/mixed
+7	http://ballroom-a.scaleav.us:8080/mixed
+8	http://ballroom-b.scaleav.us:8080/mixed
+9	http://ballroom-c.scaleav.us:8080/mixed
+10	http://ballroom-de.scaleav.us:8080/mixed
+11	http://ballroom-f.scaleav.us:8080/mixed
+12	http://ballroom-g.scaleav.us:8080/mixed
+13	http://ballroom-h.scaleav.us:8080/mixed
+14	http://extra1.scaleav.us:8080/mixed
+15	http://extra-2.scaleav.us:8080/mixed
+16	http://extra-3.scaleav.us:8080/mixed
+...
+
+## Run the software to monitor the conference
+...
+bin/mothership 
+...
+
+# Mike, what does all this do?
+...
+gst-launch-1.0 souphttpsrc src=http://127.0.0.1:8080/mixed
+gst-launch-1.0 souphttpsrc src=http://127.0.0.1:8080/mixed ! autovideosink
+gst-inspect-1.0 souphttpsrc
+gst-launch-1.0 souphttpsrc location=http://127.0.0.1:8080/mixed ! autovideosink
+gst-launch-1.0 souphttpsrc location=http://127.0.0.1:8080/mixed ! decodebin ! autovideosink
+...
 
 ## Contribution
 
@@ -44,12 +150,6 @@ git push -u origin mstarch/fixing-push-button
 i.e.
 0 http://example.com:8080/mixed
 ```
-
-## Testing
-
-TBD
-
-
 ## Description
 
 This repository holds the python, GStreamer, and GTK+ reworking of the ScaleAV video stream monitoring software. This solution has several advantages above the original solution:
