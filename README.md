@@ -4,8 +4,8 @@
 
 **n.b.** This application requires an Intel CPU (newer i5 and i7) that has a hardware decoder for H264 video. It is recommended that the configuration be set to one stream for development and testing.
 
-# Installation
-## Operating system configuration
+## Installation
+### Operating system configuration
 - Install the latest Ubuntu release
 - Select the full installation, not the minimal installation
 - Select installing encumbered software to get the video tools
@@ -25,7 +25,7 @@ sudo apt install vlc git gir1.2-gtk-3.0 gir1.2-gst-plugins-base-1.0 python3-gi g
     - Select Apply Changes
     - Select Close
 
-## Make sure the video drivers were recognized
+### Make sure the video drivers were recognized
 ```
 sudo apt install vainfo
 ```
@@ -36,8 +36,23 @@ sudo vainfo
   Driver version: Splitted-Desktop Systems VDPAU backend for VA-API - 0.7.4
 ```
 
-# Install the ScaleAV software
-## Clone the git repository
+### Set up incoming ssh connection support
+```
+sudo apt install openssh-server
+```
+
+### Open the firewall for incoming ssh connections
+```
+sudo ufw allow ssh
+```
+```
+Rules updated
+Rules updated (v6)
+
+```
+
+## Install the ScaleAV software
+### Clone the git repository
 ```
 cd ~
 mkdir code
@@ -46,16 +61,16 @@ git clone https://github.com/socallinuxexpo/scaleav-monitor.git
 cd scaleav-monitor
 ```
 
-## Set up the rooms to monitor
+### Set up monitoring a test stream on your local host
 ```
 vi config/rooms
 ```
 ```
-0	http://monitor3:8080/mixed
+0	http://localhost:8080/mixed
 ```
 
-# Test streaming
-## Set up a test streaming source
+## Test streaming
+### Start the test stream to monitor
 - Download an mp4 sample file, we use Mike's ~/20150111_150020.mp4
 - Stream the test video from the command line
 ```
@@ -82,13 +97,13 @@ vlc
   - Copy the generated stream output string for command line use
   - Stream
 
-## Run the software to monitor the test signal
+### Run the software to monitor the test signal
 ```
 bin/mothership 
 ```
 
-# Execution:
-## Set up the rooms to monitor
+## Execution:
+### Set up the rooms to monitor
 ```
 vi config/rooms
 ```
@@ -112,18 +127,9 @@ vi config/rooms
 16	http://extra-3.scaleav.us:8080/mixed
 ```
 
-## Run the software to monitor the conference
+### Run the software to monitor the conference
 ```
 bin/mothership 
-```
-
-# Mike, what does all this do?
-```
-gst-launch-1.0 souphttpsrc src=http://127.0.0.1:8080/mixed
-gst-launch-1.0 souphttpsrc src=http://127.0.0.1:8080/mixed ! autovideosink
-gst-inspect-1.0 souphttpsrc
-gst-launch-1.0 souphttpsrc location=http://127.0.0.1:8080/mixed ! autovideosink
-gst-launch-1.0 souphttpsrc location=http://127.0.0.1:8080/mixed ! decodebin ! autovideosink
 ```
 
 ## Contribution
