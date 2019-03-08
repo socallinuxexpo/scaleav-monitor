@@ -179,7 +179,3 @@ This repository holds the python, GStreamer, and GTK+ reworking of the ScaleAV v
 
 These instructions assume a Debian/Ubuntu system with Python 3 installed.
 **Note:** Only tested on Ubuntu
-
-## Known Bugs
-- Windows are designed to regenerate when killed, forcing an external process termination
-- If a window is killed too quickly after regneration, property-not-found errors may arise due to incomplete initialization
