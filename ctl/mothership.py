@@ -8,12 +8,14 @@ import os
 import sys
 import subprocess
 import functools
+import re
 class MothershipControl(object):
     '''
     Control class for mothership
     @author starchmd, mescoops
     @date 2018-02-10
     '''
+    COMMENT_REG = re.compile(r"(#|!|;).*")
     def __init__(self, display):
         '''
         Construct the control
@@ -31,14 +33,18 @@ class MothershipControl(object):
         seq = 1
         with open(config, "r") as fptr:
             for line in fptr.readlines():
+                line = self.COMMENT_REG.sub("", line)
+                line =line.strip()
                 spl = line.split()
                 if len(spl) != 2:
-                    raise Exception("Invalid config file format: [{0}]".format(line))
-                index = spl[0]
+                    print("[ERROR] invalid config line: {0}:{1}".format(config, seq), file=sys.stderr)
+                    continue
+                power = spl[0].lower() == "on" #specfies room status at boot or reload
+                index = str(seq - 1)
                 host = spl[1]
                 self.rooms[seq] = {"index": index, "process": None, "host": host}
                 self.display.add_room(host, functools.partial(self.start, seq),
-                                      functools.partial(self.stop, seq))
+                                      functools.partial(self.stop, seq), power)
                 seq = seq + 1
         self.display.unlock()
     def start(self, key):

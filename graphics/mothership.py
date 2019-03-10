@@ -66,7 +66,7 @@ class MothershipDisplay(graphics.base.BaseDisplay):
         '''
         self.shutdowncb = shutdown
         self.restartcb = restart
-    def add_room(self, name, onf, off):
+    def add_room(self, name, onf, off, startOn = True):
         '''
         Adds a room entry to the GUI
         @param name: name of room to add
@@ -77,7 +77,7 @@ class MothershipDisplay(graphics.base.BaseDisplay):
         #Room switch
         switch = Gtk.Switch()
         switch.connect("notify::active", functools.partial(room_on_off, onf, off))
-        switch.set_active(True)
+        switch.set_active(startOn)
         self.buttons.append(switch)
         room.pack_start(switch, False, False, 0)
         #Room label
