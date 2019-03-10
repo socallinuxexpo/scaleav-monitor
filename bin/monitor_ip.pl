@@ -29,7 +29,7 @@ my $ping_timeout    = 0.125;
 my $scan_interval   = 5.00;        # Rescan rate in seconds
 my $check_network   = 1;           # Perform a ping test
 my $check_app       = 0;           # Perform a protocol status query
-my $play_sound      = 0;
+my $play_sounds     = 0;
 # Define column titles and associated hostname rules
 #   append the suffix to the base hostname to create the associated hardware FQDN
 my $machines = [
@@ -63,29 +63,35 @@ sub main {
     while (1) {
         home_screen();
         printf("%-25.25s %-8s %-8s %-8s\n", 'Room', map $_->[0], @$machines);
-        my $danger = 0;
+        my $in_danger = 0;
         foreach my $room (sort @$names) {
             printf('%-25.25s', "$room: ");
             foreach my $machine (@$machines) {
                 (my $hostname = $room) =~ s/\./$machine->[1]./;
-                if ($ping->ping($hostname, $ping_timeout)) {
-                    $status->{$room}->{$machine} = 0;
-                    print green_dot();
-                } else {
-                    $status->{$room}->{$machine}++;
-                    if ($status->{$room}->{$machine} >= 2 and 
-                            $status->{$room}->{$machine} <= 5) {
-                        print red_bg(), red_dot(), black_bg();
-                        $danger = 1;
+		if ($check_app) {
+                    # For each line determine an application level query and
+                    # set of responses.  Use wget or library to send the query
+                    # and receive back responses.  If fails check network below
+		} elsif ($check_network) {
+                    if ($ping->ping($hostname, $ping_timeout)) {
+                        $status->{$room}->{$machine} = 0;
+                        print green_dot();
                     } else {
-                        print red_dot();
+                        $status->{$room}->{$machine}++;
+                        if ($status->{$room}->{$machine} >= 2 and 
+                                $status->{$room}->{$machine} <= 5) {
+                            print red_bg(), red_dot(), black_bg();
+                            $in_danger = 1;
+                        } else {
+                            print red_dot();
+                        }
                     }
                 }
             }
             print "\n";
         }
 	play_sound(($sound_toggle++ % 2) ? $soundfile2 : $soundfile)
-            if ($danger);
+            if ($play_sounds and $in_danger);
         sleep $scan_interval;
     }
 }
@@ -102,12 +108,12 @@ Usage:  $0 [--noping|ping] [--noapp|app] [--nosound|sound] [--soundfile=<file>]
 EOF
     foreach my $arg (@_) {
         if ($arg eq '--sound') {
-            $play_sound = 1;
+            $play_sounds = 1;
             next;
         }
 
         if ($arg eq '--nosound') {
-            $play_sound = 0;
+            $play_sounds = 0;
             next;
         }
 
