@@ -1,0 +1,64 @@
+#!/bin/bash
+
+## User Settings ##
+LIBVA_DRIVER_NAME="iHD"
+TEST_VIDEO="/media/image/Images.mp4"
+let WIDTH=960
+let HEIGHT=540
+let TEST_STREAM_DURATION=60
+let TEST_STREAMS=$( nproc )*2
+
+## Constants ##
+DRIVER_PATH="/usr/lib/x86_64-linux-gnu/dri"
+KERNEL_DRI_PATH="/sys/kernel/debug/dri"
+DEVICE_PATH="/dev/dri"
+TESTER_LOGS="tester-logs"
+let TEST_STREAMS=$( nproc )*2
+
+## Safety Checks ##
+if [[ "$(groups | grep video)" == "" ]]
+then
+    echo "[WARNING] User not in 'video' group"
+fi
+if [[ "$(groups | grep render)" == "" ]]
+then
+    echo "[WARNING] User not in 'render' group"
+fi
+
+# Search through all cards looking for the intel card
+for card in $(sudo ls -1 "${KERNEL_DRI_PATH}" | egrep "^1\d*")
+do
+    DEVICE_NAME="$( sudo cat "${KERNEL_DRI_PATH}/${card}/name" | awk '{ print $1 }' )"
+    RENDER_DEVICE="/dev/dri/renderD${card}"
+    if [[ "${DEVICE_NAME}" =~ i* ]] && [ -e "${RENDER_DEVICE}" ]
+    then
+	break
+    fi
+done
+
+# Error, no device found
+if [[ "${RENDER_DEVICE}" == "" ]]
+then
+    echo "[ERROR] Render device not found"
+    exit 1
+fi
+export LIBVA_DRIVER_NAME="${LIBVA_DRIVER_NAME}"
+echo -e "\n----------------------------------------------"
+echo    "[INFO] Found render device: ${RENDER_DEVICE}"
+echo    "[INFO] Using driver name:   ${LIBVA_DRIVER_NAME}"
+echo    "[INFO] Rendering size:      (${WIDTH},${HEIGHT})"
+echo    "[INFO] Testing streams:     ${TEST_STREAMS} streams" 
+echo    "[INFO] Test duration:       ${TEST_STREAM_DURATION} S" 
+echo    "[INFO] Test Source:         ${TEST_VIDEO}"
+echo    "[INFO] LIBVA_DRIVER_NAME=${LIBVA_DRIVER_NAME}"
+echo -e "----------------------------------------------\n"
+mkdir -p tester-logs/
+vainfo --display drm --device "${RENDER_DEVICE}" 1> "${TESTER_LOGS}/vainfo.log" 2>&1
+
+# Launch!
+for core in `seq ${TEST_STREAMS}`
+do
+    timeout ${TEST_STREAM_DURATION} gst-launch-1.0 multifilesrc location=${TEST_VIDEO} loop=true ! \
+	   decodebin ! vaapipostproc width=${WIDTH} height=${HEIGHT} ! xvimagesink 1> "${TESTER_LOGS}/gst.${core}.log" 2>&1 &
+done
+wait
