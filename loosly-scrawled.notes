@@ -1,0 +1,19 @@
+1. VDPAU is used to make NVIDIA cards play with the VAAPI.
+   a. VDPAU needs to be installed when processing with an NVIDIA card
+2. intel-media-driver is integrated with vaapi automatically
+3. Render cards in /dev/dri/renderD12[89]:
+   a. 128 is the default
+   b. 129 exists in dual-card systems
+4. The card can be chose via GST environment variable
+5. The driver (intel) needs to be choosen: iHD: intel's driver.  i965: oss driver
+   a. both take advantage of hardware acceleration
+6. On dual systems, you need to set the VAAPI driver with an env var to use intel
+   b. set the env driver or nvidia will be used
+7. Monitor for hardware acceleration with "intel-gpu-tools"
+   a. intel_gpu_top: this monitors the engines
+8. decodebin does not use vaapipostproc which is essential.
+   a. It scales and formats video
+   b. Uses acceleration to do so
+   c. Can work with xvimagesink
+   d. Using glimagesink works, but will use CPU to reformat. Bummer.
+
