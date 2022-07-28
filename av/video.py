@@ -21,7 +21,9 @@ class Video(av.stream.BaseStream):
         '''
         logging.debug("Setting up video stream")
         self.window = window
-        stages = [{"name":"autosink-1", "type":"xvimagesink"}]
+        stages = [
+            {"name": "intelpostproc-1", "type": "vaapipostproc"},
+            {"name":"autosink-1", "type":"xvimagesink"}]
         super(Video, self).__init__("Video Pipeline", stages, pipeline)
     def on_sync(self, bus, msg):
         '''

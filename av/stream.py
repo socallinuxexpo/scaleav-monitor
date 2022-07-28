@@ -5,6 +5,7 @@ Base stream class used to handle the basic functions of GST processing.
 @data: 2018-02-14 (refactor)
 '''
 import logging
+import sys
 import gi
 gi.require_version("Gst", "1.0")
 from gi.repository import  Gst, GstVideo
@@ -46,6 +47,9 @@ class BaseStream(object):
         #Build the stages
         for index, stage in enumerate(stages):
             elem = Gst.ElementFactory.make(stage["type"], stage["name"])
+            if not elem:
+                print("\n\n----ERROR----", stage["type"], " plugin not available. ----\n\n", file=sys.stderr)
+                sys.exit(-1)
             for sname, prop in stage.items():
                 if sname == "type" or sname == "callback" or sname == "nolink":
                     continue
