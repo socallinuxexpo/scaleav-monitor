@@ -1,0 +1,97 @@
+#!/usr/bin/perl -w
+#
+# Read this year's conference room names from $namesfile and generate the HTML
+# site $webfile and control file $hostfile.
+
+use strict;
+use warnings;
+
+my $debug = 4; # <6 = write files, >=6 -> stdout
+my $monpath = ($debug >= 6) ? '.' : "$ENV{'HOME'}/code/scaleav-monitor";
+my $namesfile = "$monpath/room_names_lax_hilton.txt";
+my $webfile = "$monpath/interfaces.html";
+my $hostfile = "$monpath/config/rooms.txt";
+
+main(html_headers());
+exit(0);
+
+sub main {
+    my ($html_head, $html_tail) = @_;
+
+    open(FD, '<', $namesfile) or die "Error reading $namesfile: $!";
+    my @lines = <FD>;
+    close FD;
+    chomp @lines;
+
+    print STDOUT "Creating the monitoring control file\n";
+    if ($debug >= 6) {
+        *CTL = *STDOUT;
+    } else {
+        open(CTL, '>', $hostfile) or die "Error writing $hostfile: $!";
+    }
+
+    foreach my $room (@lines) {
+        next if $room =~ m/^$/;
+        (my $site = $room) =~ s/angeles/angles/;
+        print CTL "off     rtmp://$site.scaleav.us:1935/scale/mixed\n";
+    }
+    print CTL "\n";
+    close CTL if ($debug < 6);
+
+    print STDOUT "Creating the equipment monitoring webpage\n";
+    if ($debug >= 6) {
+        *WEB = *STDOUT;
+    } else {
+        open(WEB, '>', $webfile) or die "Error writing $webfile: $!\n";
+    }
+
+    print WEB "$html_head";
+    foreach my $room (@lines) {
+        next if $room =~ m/^$/;
+        (my $site = $room) =~ s/angeles/angles/;
+        print WEB "  <tr>\n    <td>$room</td>\n    <td><button onclick=\"NewTab('http://$site.scaleav.us/html/yeet.html')\">$site.scaleav.us</button></td>\n    <td><button onclick=\"NewTab('http://$site-mixer.scaleav.us/mixer.html')\">$site-mixer.scaleav.us</button></td>\n  </tr>\n";
+    }
+    print WEB "$html_tail";
+    print WEB "\n";
+    close WEB if ($debug < 6);
+}
+
+sub html_headers {
+    my $head = <<EOF;
+<html>
+<head>
+<script>
+	function NewTab(url) {
+		window.open(url, "_blank");
+	}
+</script>
+<style>
+table {
+	border-spacing: 10px 5px;
+}
+th {
+	font-size: 2.0em;
+}
+button {
+	font-size: 1.0em;
+}
+td {
+	font-size: 2.0em;
+}
+</style>
+</head>
+<body>
+<img src="$ENV{'HOME'}/code/scaleav-monitor/img/19x_logo_sm.png" />
+<table border=2>
+<tr><th>Room</th><th>Controls</th><th>Mixer</tr></tr>
+EOF
+
+    my $tail = <<EOF;
+</table>
+</body>
+</html>
+EOF
+
+    return ($head, $tail);
+}
+

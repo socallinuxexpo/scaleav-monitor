@@ -1,0 +1,17 @@
+Room 101
+Room 103
+Room 107
+Room 104
+Room 106
+Room 211
+Room 212
+Ballroom A
+Ballroom B
+Ballroom C
+Ballroom DE
+Ballroom F
+Ballroom G
+Ballroom H
+Extra1
+Extra 2
+Extra 3

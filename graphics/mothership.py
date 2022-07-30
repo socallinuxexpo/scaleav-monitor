@@ -42,7 +42,7 @@ class MothershipDisplay(graphics.base.BaseDisplay):
         self.buttons.append(button)
         #Load image to display at top of controls
         logo = Gtk.Image.new_from_file(os.path.join(os.path.dirname(__file__),
-                                                        "..", "img", "16x_logo_sm.png"))
+                                                        "..", "img", "19x_logo_sm.png"))
         #Virtival display box
         self.roombox = Gtk.Box(spacing=6, orientation=Gtk.Orientation.VERTICAL)
         self.roombox.pack_start(logo, False, True, 0)
