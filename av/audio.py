@@ -19,5 +19,6 @@ class Audio(av.stream.BaseStream):
         '''
         logging.debug("Creating audio pipeline")
         stages = [{"name":"input-mux-1", "type":"input-selector"},
+                  {"name":"audio-converter-1", "type":"audioconvert"},
                   {"name":"audio-sink", "type":"autoaudiosink"}]
         super(Audio, self).__init__("Audio Pipeline", stages, pipeline)
