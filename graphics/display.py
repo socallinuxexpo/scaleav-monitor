@@ -22,8 +22,9 @@ class AVDisplay(graphics.base.DrawableDisplay):
         logging.debug("Setting up AV Display")
         self.title = title
         self.stream = stream
-        super(AVDisplay, self).__init__(index, title)
-        #Pass in 'self' as window
+        # Set up Gtk window heirarchy
+        super().__init__(index, title)
+
         logging.debug("Done setting up AV Display")
         self.retrying = False
         self.avs = None
@@ -37,7 +38,7 @@ class AVDisplay(graphics.base.DrawableDisplay):
         if not self.avs is None:
             def start_stream(stream):
                 '''Run on GUI thread'''
-                self.img.hide()
+                self.win_splash.hide()
                 stream.start()
             GObject.idle_add(start_stream, self.avs)
     def start(self):
@@ -57,7 +58,7 @@ class AVDisplay(graphics.base.DrawableDisplay):
         '''
         def show_img(*args):
             '''Callback to show image'''
-            self.img.show()
+            self.win_splash.show()
         GObject.idle_add(show_img, None)
         if self.retrying:
             return
@@ -76,7 +77,7 @@ class AVDisplay(graphics.base.DrawableDisplay):
         '''
         state = self.avs.pipeline.get_state(0).state
         if state == Gst.State.PLAYING:
-            self.img.hide()
+            self.win_splash.hide()
             self.retrying = False
             return False
         self.start()
