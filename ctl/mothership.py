@@ -36,6 +36,7 @@ class MothershipControl(object):
                 line = self.COMMENT_REG.sub("", line)
                 line =line.strip()
                 spl = line.split()
+                if line == "": continue
                 if len(spl) != 2:
                     print("[ERROR] invalid config line: {0}:{1}".format(config, seq), file=sys.stderr)
                     continue
