@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=The Mothership
+GenericName=The Mothership
+Exec=/home/scale/code/scaleav-monitor/bin/mothership
+Terminal=false
+Icon=/home/scale/code/scaleav-monitor/img/mothership.png
+Type=Application
+Categories=Application;Network
+Comment=ScaleAV master control software
+StartupWMClass=ScaleAV
