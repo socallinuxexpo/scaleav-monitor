@@ -1,20 +1,45 @@
-echo "Set up rooms data"
-cd ~/code/scaleav-monitor/config
-rm rooms
-cat rooms.pas # and validate contents
-ln -s rooms.pas rooms
+# Configure for a show
+- Set up rooms data
+    cd ~/code/scaleav-monitor/config
+    rm rooms
+    cat rooms.pas # and validate contents
+    ln -s rooms.pas rooms
 
-echo "Create desktop icons"
-cd ..
-cp config/mothership.desktop ~/desktop
-sudo cp config/mothership.desktop /usr/share/applications
-echo "Right mouse click desktop/mothership -> Properties -> Allow Executing"
-echo "Right mouse click desktop/mothership -> Allow Launching"
+# Create desktop icons
+- Install the icon files
+    cd ~/code/scaleav-monitor
+    cp config/mothership.desktop ~/desktop
+    sudo cp config/mothership.desktop /usr/share/applications
+- Right mouse click desktop/mothership -> Properties -> Allow Executing
+- Right mouse click desktop/mothership -> Allow Launching
 
-bin/mothership 
+# Launch the monitoring software
+    bin/mothership
+
+# Launch the audio mixer window
+    firefox http://room-105-mixer.scaleav.us/mixer.html
+
+# Launch a camera control window
+    firefox http://room-105.scaleav.us/html/yeet.html
+
+# Using the mixer
+- To set the high-pass filter
+    - Click Edit
+    - Select the EQ tab
+    - then Drag blue to the right until the -20 crossing passes 50hz
+- To set the recording volumes:
+    - Set the faders to -24 (-0.3db)
+    - Toggle Mix/Gain to red and set the levels until lights peak at -24
+    - Very carefully nudge levels as they make a big hit in the room
+
+
+# Other diagnostic tools
+vlc rtmp://room-107-cam.scaleav.us
+
 gst-launch-1.0 souphttpsrc src=http://127.0.0.1:8080/mixed
 gst-launch-1.0 souphttpsrc src=http://127.0.0.1:8080/mixed ! autovideosink
 gst-inspect-1.0 souphttpsrc
 gst-launch-1.0 souphttpsrc location=http://127.0.0.1:8080/mixed ! autovideosink
 gst-launch-1.0 souphttpsrc location=http://127.0.0.1:8080/mixed ! decodebin ! autovideosink
+
 
