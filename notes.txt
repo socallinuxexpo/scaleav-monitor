@@ -17,24 +17,34 @@
     bin/mothership
 
 # Launch the audio mixer window
-    firefox http://room-105-mixer.scaleav.us/mixer.html
+    /snap/firefox/2391/usr/lib/firefox/firefox \
+        http://room-105-mixer.scaleav.us/mixer.html
 
 # Launch a camera control window
+    /snap/firefox/2391/usr/lib/firefox/firefox \
     firefox http://room-105.scaleav.us/html/yeet.html
 
 # Using the mixer
 - To set the high-pass filter
-    - Click Edit
-    - Select the EQ tab
-    - then Drag blue to the right until the -20 crossing passes 50hz
+    - Select the Edit button at the top of the screen
+    - Select the Red EQ tab just under the edit button
+    - Select the channel tab at the bottom of the screen
+    - Drag blue low filter to the right until the -20 crossing passes at 50hz
 - To set the recording volumes:
-    - Set the faders to -24 (-0.3db)
-    - Toggle Mix/Gain to red and set the levels until lights peak at -24
-    - Very carefully nudge levels as they make a big hit in the room
+    - Center all three knobs on the physical mixer to high noon
+    - Ignore the gradiations and only pay attention to the blue numbers
+    - Select Mix on the Mix/Gain button
+    - Set the faders on the first three channels to 0.0db (-24) by right clicking on the blue numbers
+    - Mute the unused channels by clicking each mute button to red
+    - Toggle Mix/Gain to Gain (red)
+    - Play back a known signal into each channel in turn
+        - Set the gain level slider until the channel level lights peak at -24
 
 
 # Other diagnostic tools
-vlc rtmp://room-107-cam.scaleav.us
+- Use VLC to watch a camera directly
+    /snap/vlc/3078/usr/bin/vlc
+        rtsp://ballroom-de-cam.scaleav.us/1
 
 gst-launch-1.0 souphttpsrc src=http://127.0.0.1:8080/mixed
 gst-launch-1.0 souphttpsrc src=http://127.0.0.1:8080/mixed ! autovideosink
