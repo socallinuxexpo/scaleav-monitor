@@ -22,8 +22,9 @@ class AV(av.stream.BaseStream):
         '''
         logging.debug("Building AV stream")
         self.stream = stream
-        stages = [{"name":"rtmp-1", "type":"rtmpsrc", "location":stream, "live":1},
-                  {"name":"decode-1", "type":"decodebin", "callback": self.create_child,
+        stages = [{"name":"rtmp-1", "type":"rtmpsrc", "location":stream },
+                  {"name":"decode-1", "type":"decodebin",
+                   "callback": self.create_child,
                    "use-buffering": False},
                   {"name":"test-src-1", "type":"audiotestsrc", "nolink":True, "volume":0}]
         self.audios = {}
