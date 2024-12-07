@@ -17,7 +17,7 @@ sudo apt upgrade
 ```
 - Install the required packages
 ```
-sudo apt install vlc git gir1.2-gtk-3.0 gir1.2-gst-plugins-base-1.0 python3-gi gstreamer-1.0 python3-gst-1.0 libcanberra-gtk3-module gstreamer1.0-vaapi
+sudo apt install vlc git python3-gi python3-gst-1.0 gstreamer1.0-gtk3 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-tools gstreamer1.0-plugins-bad
 ```
 - Install proprietary video drivers
   - From the launcer open 'Software & updates'

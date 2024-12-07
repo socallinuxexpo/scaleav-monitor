@@ -7,6 +7,7 @@ Base stream class used to handle the basic functions of GST processing.
 import logging
 import gi
 gi.require_version("Gst", "1.0")
+gi.require_version("GstVideo", "1.0")
 from gi.repository import  Gst, GstVideo
 import util.log
 
@@ -27,6 +28,20 @@ class BaseStream(object):
         self.stages = stages
         self.pipeline = pipeline
         self.build(name, stages)
+
+    def add_element(self, etype, name, stage=None):
+        """Add an element"""
+        stage = {} if stage is None else stage
+        elem = Gst.ElementFactory.make(etype, name)
+        for sname, prop in stage.items():
+            if sname == "type" or sname == "callback" or sname == "nolink":
+                continue
+            elem.set_property(sname, prop)
+        if stage.get("callback", None) is not None:
+            BaseStream.register_dynamic_callback(stage, elem)
+        self.pipeline.add(elem)
+        return elem
+
     def build(self, name, stages):
         '''
         Build the GStreamer pipeline
@@ -45,15 +60,8 @@ class BaseStream(object):
         self.bus.connect("sync-message::element", self.on_sync)
         #Build the stages
         for index, stage in enumerate(stages):
-            elem = Gst.ElementFactory.make(stage["type"], stage["name"])
-            for sname, prop in stage.items():
-                if sname == "type" or sname == "callback" or sname == "nolink":
-                    continue
-                elem.set_property(sname, prop)
+            elem = self.add_element(stage["type"], stage["name"], stage)
             #Register callback on decode create
-            if "callback" in stage:
-                BaseStream.register_dynamic_callback(stage, elem)
-            self.pipeline.add(elem)
             if index > 0 and not "callback" in stages[index-1] and \
                not stages[index].get("nolink", False):
                 logging.debug("Linking %s to %s", stages[index-1]["name"], elem.get_name())

@@ -18,6 +18,7 @@ class Audio(av.stream.BaseStream):
         Initialize the GStreamer pipeline
         '''
         logging.debug("Creating audio pipeline")
-        stages = [{"name":"input-mux-1", "type":"input-selector"},
-                  {"name":"audio-sink", "type":"autoaudiosink"}]
+        stages = [
+            {"name":"input-mux-1", "type":"input-selector"},
+            {"name":"audio-sink", "type":"autoaudiosink"}]
         super(Audio, self).__init__("Audio Pipeline", stages, pipeline)

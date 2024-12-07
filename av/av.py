@@ -4,6 +4,7 @@ Module containing the functions for build a combined audio/visual stream.
 @author starchmd
 @date 2018-02-14 (refactor)
 '''
+import gi
 import logging
 import av.video
 import av.audio
@@ -22,7 +23,8 @@ class AV(av.stream.BaseStream):
         '''
         logging.debug("Building AV stream")
         self.stream = stream
-        stages = [{"name":"rtmp-1", "type":"rtmpsrc", "location":stream},
+        stream_type = "filesrc" if not stream.startswith("http:") else "rtmpsrc"
+        stages = [{"name":"rtmp-1", "type":stream_type, "location":stream},
                   {"name":"decode-1", "type":"decodebin", "callback": self.create_child},
                   {"name":"test-src-1", "type":"audiotestsrc", "nolink":True, "volume":0}]
         self.audios = {}
@@ -39,6 +41,9 @@ class AV(av.stream.BaseStream):
         testsrc.link_pads(None, switch, None)
         full_sink = "sink_{0}".format(switch.get_property("n-pads") - 1)
         self.audios["None"] = switch.get_static_pad(full_sink)
+        self.aconverts = [self.add_element("audioconvert", f"ac-{i}") for i in range(0,5)]
+
+
     def get_audio_streams(self):
         '''
         Get list of audio streams
@@ -92,7 +97,13 @@ class AV(av.stream.BaseStream):
             active = "Audio-{0}".format(len(self.audios.keys()))
             logging.debug("Linking dynamic audio from: %s", active)
             switch = self.audio.get_first_stage()
-            parent.link_pads(pad.get_name(), switch, None)
+            if not self.aconverts:
+                logging.warning("No more audioconverters")
+                return
+            aconvert = self.aconverts[0]
+            self.aconverts = self.aconverts[1:]
+            aconvert.link(switch)
+            parent.link_pads(pad.get_name(), aconvert, None)
             full_sink = "sink_{0}".format(switch.get_property("n-pads") - 1)
             logging.debug("Assigning %s to new pad: %s", str(active), full_sink)
             self.audios[active] = switch.get_static_pad(full_sink)
