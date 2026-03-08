@@ -6,21 +6,17 @@
 # To prevent a room from being displayed on the stream simply comment it out to # or ! or ;
 # @author pelmini
 
-
-on 	http://room-101.scaleav.us:8080/mixed
-on 	http://room-103.scaleav.us:8080/mixed
-on 	http://room-107.scaleav.us:8080/mixed
-off	http://room-104.scaleav.us:8080/mixed
-off	http://room-106.scaleav.us:8080/mixed
-off	http://room-211.scaleav.us:8080/mixed
-off	http://room-212.scaleav.us:8080/mixed
-off	http://ballroom-a.scaleav.us:8080/mixed
-off	http://ballroom-b.scaleav.us:8080/mixed
-off	http://ballroom-c.scaleav.us:8080/mixed
-off	http://ballroom-de.scaleav.us:8080/mixed
-off	http://ballroom-f.scaleav.us:8080/mixed
-off	http://ballroom-g.scaleav.us:8080/mixed
-off	http://ballroom-h.scaleav.us:8080/mixed
-off	http://extra1.scaleav.us:8080/mixed
-off	http://extra-2.scaleav.us:8080/mixed
-off	http://extra-3.scaleav.us:8080/mixed
+off	http://room-101.scaleav.us:1935/scale/mixed
+off	http://room-103.scaleav.us:1935/scale/mixed
+off	http://room-105.scaleav.us:1935/scale/mixed
+off	http://room-106.scaleav.us:1935/scale/mixed
+off	http://room-107.scaleav.us:1935/scale/mixed
+off	http://room-211.scaleav.us:1935/scale/mixed
+# off	http://room-212.scaleav.us:1935/scale/mixed
+off	http://ballroom-a.scaleav.us:1935/scale/mixed
+off	http://ballroom-b.scaleav.us:1935/scale/mixed
+off	http://ballroom-c.scaleav.us:1935/scale/mixed
+off	http://ballroom-de.scaleav.us:1935/scale/mixed
+off	http://ballroom-f.scaleav.us:1935/scale/mixed
+off	http://ballroom-g.scaleav.us:1935/scale/mixed
+off	http://ballroom-h.scaleav.us:1935/scale/mixed
