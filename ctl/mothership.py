@@ -23,19 +23,22 @@ class MothershipControl(object):
         self.rooms = {}
         self.display = display
         self.display.set_callbacks(self.shutdown, self.restart_all)
+    
     def configure(self, config):
         '''
         This will configure the application based on the
         passed in configuration file path
         @param config: configuration path
         '''
-        self.display.lock()
         seq = 1
         with open(config, "r") as fptr:
             for line in fptr.readlines():
                 line = self.COMMENT_REG.sub("", line)
                 line =line.strip()
                 spl = line.split()
+                # Silence comments
+                if not spl:
+                    continue
                 if len(spl) != 2:
                     print("[ERROR] invalid config line: {0}:{1}".format(config, seq), file=sys.stderr)
                     continue
