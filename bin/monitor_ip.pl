@@ -62,7 +62,7 @@ sub main {
         my $in_danger = 0;
         foreach my $room (sort @$names) {
             print (($status->{$room}->{'state'} eq 'off')
-                ? dkgrey_fg()
+                ? dkred_fg()
                 : white_fg());
             printf('%-25.25s', "$room: ");
             foreach my $machine (@$machines) {
@@ -194,6 +194,10 @@ sub black_bg {
     return "\033[40;0m";
 }
 
+sub dkred_fg {
+    return "\033[31;1m";
+}
+
 sub dkgrey_fg {
     return "\033[30;1m";
 }
@@ -230,7 +234,7 @@ sub parseFile {
         print "  line: $line\n" if ($debug >= 8);
         $line =~ s/[!;#].*//;
         next if ($line =~ m/^\s*$/);
-        my ($state, $fqdn) = ($line =~ m/\s*(\S*).*http:\/\/(.*):8080.*/);
+        my ($state, $fqdn) = ($line =~ m/\s*(\S*).*http:\/\/(.*):\d{4}.*/);
         print "    state: $state, name: $fqdn\n" if ($debug >= 6);
         $status->{$fqdn} = {};
         $status->{$fqdn}->{'state'} = $state;
